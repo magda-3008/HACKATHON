@@ -1,7 +1,7 @@
 //página de inicio
 function acceder() {
     let login = document.getElementById("login");
-    //let signup = document.getElementById("signup");
+    let signup = document.getElementById("signup");
 
 }
 
@@ -14,17 +14,19 @@ function Loguear() {
         window.location = "paciente.html";
     }
     else {
-        alert("Datos incorrectos");
+        const registroMessageLogin = document.getElementById('registro-messageLogin');
+        registroMessageLogin.textContent = 'Datos incorrectos. Por favor, verifique su usuario y contraseña.';
+        registroMessageLogin.style.color = 'red';
     }
 }
 
 //sign up
-//function registrar() {
-  //  const nuevoUsuario = document.getElementById('nuevo-usuario').value;
-  //  const nuevaClave = document.getElementById('nueva-clave').value;
+function registrar() {
+    const nuevoUsuario = document.getElementById('nuevo-usuario').value;
+    const nuevaClave = document.getElementById('nueva-clave').value;
 
-  //  const registroMessage = document.getElementById('registro-message');
-  //  registroMessage.textContent = 'Registro exitoso. Ahora puedes iniciar sesión.';
-  //  registroMessage.style.color = 'green';
+    const registroMessage = document.getElementById('registro-message');
+    registroMessage.textContent = 'Registro exitoso. Ahora puedes iniciar sesión.';
+    registroMessage.style.color = 'green';
 
-//}
+}
