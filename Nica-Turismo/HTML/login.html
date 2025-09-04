@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="../CSS/StylesLogin.css">
+    <script src="../JavaScript/Code.js" defer></script>
+</head>
+<body>
+     <form action="" method="post" onsubmit="return false;">
+        <h2 class="titt"><strong>-Iniciar sesión-</strong></h2>
+
+        <label for="usuario">
+            <input type="text" placeholder="👤Usuario" id="usuario" required>
+        </label>
+       
+        <label for="clave">
+            <input type="password" placeholder="🔒Contraseña" id="clave" required>
+        </label>
+        <p class="text" >¿No tiene una cuenta? <a href="signup.html" class="link">Cree una aquí</a></p><br>
+
+        <input type="button" value="Acceder" class="ac" onclick="Loguear()">
+    </form>
+</body>
+</html>

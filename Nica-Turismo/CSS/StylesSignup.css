@@ -1,0 +1,99 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: arial;
+}
+
+
+body{
+    align-items: center;
+    background-image: url(../Resource/Playa-Login.jpg);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+
+form{
+    display: flex;
+    flex-direction: column;
+    background-color: #97d87d;
+    text-align: center;
+    padding: 30px 30px;
+    box-shadow: 0 5px 10px #36522c;
+   
+}
+
+
+form .tit{
+    color: white;
+    font-size: 35px;
+    font-weight: 800;
+    margin-bottom: 30px;
+}
+
+
+
+
+form label{
+    margin-bottom: 35px;
+}
+
+
+
+
+form label input{
+    border:solid #8b6a78;
+    border-radius: 15px;
+    color: black;
+    padding: 0 15px;
+    font-size: 18px;
+    margin: 1px;
+    width: 350px;
+    height: 40px;
+    background: rgb(240, 234, 234);
+}
+
+
+
+
+font label input::placeholder{
+    color:#8b6a78 ;
+}
+
+
+
+
+form .link{
+    color: rgb(49, 57, 174);
+   
+}
+
+.text{
+    color: white;
+}
+
+
+
+.en{
+    margin: 7px;
+    background-color: #7db1db;
+    border: 0px;
+    padding: 5px;
+    color: white;
+    margin-right: 10px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+
+
+
+.en:hover{
+    background-color: white;
+    border: 2px solid #7db1db;
+    color: #7db1db;
+}
