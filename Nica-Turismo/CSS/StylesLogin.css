@@ -24,7 +24,7 @@ form{
 }
 
 form .titt{
-    color: rgb(233, 88, 88);
+    color: #336289;
     font-size: 37px;
     font-weight: 800;
     margin-bottom: 30px;
@@ -43,7 +43,7 @@ form label input{
     margin: 1px;
     width: 350px;
     height: 40px;
-    background: #ced4cbaa;
+    background: white;
 }
 
 form label input::placeholder{
@@ -68,6 +68,3 @@ form label input::placeholder{
     color: #65afeb;
 }
 
-.text{
-    color: white;
-}

@@ -15,7 +15,7 @@ function Loguear() {
     }
     else {
         const registroMessageLogin = document.getElementById('registro-messageLogin');
-        registroMessageLogin.textContent = 'Datos incorrectos. Por favor, verifique su usuario y contraseña.';
+        registroMessageLogin.textContent = 'Datos incorrectos. Verifique su usuario y contraseña.';
         registroMessageLogin.style.color = 'red';
     }
 }
