@@ -28,7 +28,7 @@ form{
 
 
 form .tit{
-    color: rgb(233, 88, 88);
+    color: #336289;
     font-size: 37px;
     font-weight: 800;
     margin-bottom: 30px;
@@ -53,7 +53,7 @@ form label input{
     margin: 1px;
     width: 350px;
     height: 40px;
-    background: #ced4cbaa;
+    background: white;
 }
 
 
@@ -70,11 +70,6 @@ form .link{
     color: rgb(56, 65, 200);
    
 }
-
-.text{
-    color: white;
-}
-
 
 
 .en{
