@@ -8,7 +8,7 @@
 
 body{
     align-items: center;
-    background-image: url(../Resource/Playa-Login.jpg);
+    background-image: url(../Resource/ave-nacional-de-nicaragua.jpg);
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -19,17 +19,17 @@ body{
 form{
     display: flex;
     flex-direction: column;
-    background-color: #97d87d;
+    background-color: #ced4cbaa;
     text-align: center;
     padding: 30px 30px;
-    box-shadow: 0 5px 10px #36522c;
+    box-shadow: 0 5px 10px #ffffff;
    
 }
 
 
 form .tit{
-    color: white;
-    font-size: 35px;
+    color: rgb(233, 88, 88);
+    font-size: 37px;
     font-weight: 800;
     margin-bottom: 30px;
 }
@@ -38,14 +38,14 @@ form .tit{
 
 
 form label{
-    margin-bottom: 35px;
+    margin-bottom: 30px;
 }
 
 
 
 
 form label input{
-    border:solid #8b6a78;
+    border:solid #9b9c99;
     border-radius: 15px;
     color: black;
     padding: 0 15px;
@@ -53,21 +53,21 @@ form label input{
     margin: 1px;
     width: 350px;
     height: 40px;
-    background: rgb(240, 234, 234);
+    background: #ced4cbaa;
 }
 
 
 
 
 font label input::placeholder{
-    color:#8b6a78 ;
+    color:#a8a3a5d7 ;
 }
 
 
 
 
 form .link{
-    color: rgb(49, 57, 174);
+    color: rgb(56, 65, 200);
    
 }
 
@@ -79,7 +79,7 @@ form .link{
 
 .en{
     margin: 7px;
-    background-color: #7db1db;
+    background-color: #65afeb;
     border: 0px;
     padding: 5px;
     color: white;
@@ -94,6 +94,6 @@ form .link{
 
 .en:hover{
     background-color: white;
-    border: 2px solid #7db1db;
-    color: #7db1db;
+    border: 2px solid #65afeb;
+    color: #65afeb;
 }
