@@ -2,11 +2,22 @@
     --header-h: 80px; /* ← iguala la altura real del header */
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; 
+    
+    
+  }
+
 
 body {
     padding-top: var(--header-h); /* el contenido respeta el header */
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url(../Resource/cele.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+   
 }
+
 
 header{
     position: fixed;
@@ -14,7 +25,7 @@ header{
     left: 0;
     width: 100%;
     z-index: 10;
-    background: #fff; 
+    background: #26a9cabe; 
 }
 
 .header_nav{
@@ -42,7 +53,7 @@ header{
 
 .nav_list a {
     text-decoration: none;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 .nav_list h4 {
@@ -54,22 +65,23 @@ header{
 /* Asegurarnos que el texto del container esté alineado a la izquierda */
 .container {
     text-align: justify; 
-    font-size: 16px;
+    font-size: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 0 16px; /* opcional: para no pegar el texto a los bordes */
 }
 
 .container h1{
-    font-size: 25px;
+    font-size: 37px;
+     color: rgb(205, 44, 162);
 }
 
 .carousel-container {
-    max-width: 800px;   /* ajusta el ancho del carrusel */
+    max-width: 1100px;   /* ajusta el ancho del carrusel */
     margin: 40px auto;  /* centra horizontalmente y separa del contenido */
 }
 
 .carousel-inner {
-    height: 300px;      /* altura del carrusel */
+    height: 450px;      /* altura del carrusel */
 }
 
 .carousel-inner img {
@@ -77,3 +89,9 @@ header{
     width: 100%;
     object-fit: cover;   /* recorta la imagen sin deformarla */
 }
+
+.sec-1{
+    display: flex;
+    justify-content: center;
+}
+
