@@ -10,27 +10,27 @@
 </head>
 <body>
      <div class="login-container">
-        <form action="" method="">
-            <h2 class="tit"><strong>Bienvenido</strong></h2>
-            <label for="">
-                <input type="text" placeholder="👤​Usuario" id="nuevo-usuario" required>
-            </label>
-           
-            <label for="">
-                <input type="text" placeholder="📧​Correo electrónico" id="correo" required>
-            </label>
-         
-            <label for="">
-                <input type="password" placeholder="🔒​Contraseña" id="nueva-clave" required>
-            </label>
-   
-            <p id="registro-message" class="error-message"></p>
-       
-            <input type="button" value="Registrarme" class="en"  onclick="registrar()"><br>
-           
-            <p class="text" >¿Ya tenias una cuenta? <a href="login.html" class="link">Entra aquí</a></p><br>
+       <form id="signup-form">
+    <h2 class="tit"><strong>Bienvenido</strong></h2>
+    
+    <label>
+        <input type="text" name="nombre_usuario" id="nuevo-usuario" placeholder="👤 Usuario" required>
+    </label>
+    
+    <label>
+        <input type="email" name="email" id="correo" placeholder="📧 Correo electrónico" required>
+    </label>
+    
+    <label>
+        <input type="password" name="contrasena" id="nueva-clave" placeholder="🔒 Contraseña" required>
+    </label>
+    
+    <p id="registro-message" class="error-message"></p>
+    
+    <!-- Aquí usamos el botón con onclick -->
+    <input type="button" value="Registrarme" class="en" onclick="registrar(event)">
+</form>
 
-        </form>
     </div>
 </body>
 </html>
