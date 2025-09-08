@@ -28,7 +28,7 @@ form{
 
 
 form .tit{
-    color: rgb(205, 44, 162);
+    color: white;
     font-size: 37px;
     font-weight: 800;
     margin-bottom: 30px;
@@ -91,4 +91,47 @@ form .link{
     background-color: white;
     border: 2px solid #65afeb;
     color: #65afeb;
+}
+
+/* Contenedor de input + icono */
+.password-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* El ícono dentro del input */
+.password-container i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+}
+
+.input-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon i {
+    position: absolute;
+    left: 15px;
+    font-size: 18px;
+    color: #666;
+}
+
+.input-icon input {
+    padding-left: 40px; /* deja espacio para el ícono */
+}
+
+/* El ojo de mostrar/ocultar contraseña va a la derecha */
+.password-container i.bi-eye,
+.password-container i.bi-eye-slash {
+    right: 15px;
+    left: auto;
+    cursor: pointer;
 }

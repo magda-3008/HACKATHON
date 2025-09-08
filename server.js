@@ -73,18 +73,34 @@ function ejecutarConsulta(tabla, callback) {
     });
 }
 
-// Ruta para obtener los datos de pacientes y enviarlos como respuesta JSON
-app.get('/datos_usuario', (req, res) => {
-    ejecutarConsulta('datos_usuario', (err, data) => {
+// Ruta para obtener los datos de usuarios y enviarlos como respuesta JSON
+app.post('/datosusuario', (req, res) => {
+    const { usuario, contraseña } = req.body;
+
+    const query = "SELECT * FROM datos_usuario WHERE nombre_usuario = ? AND contrasena = ?";
+    conexion.query(query, [usuario, contraseña], (err, result) => {
         if (err) {
-            res.status(500).json({ error: 'Error al obtener datos de pacientes' });
-            return;
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
         }
-        res.json(data); // Enviar los datos recuperados como respuesta JSON
+
+        if (result.length > 0) {
+            // Usuario válido
+            res.json({ success: true, message: "Login exitoso" });
+        } else {
+            // Usuario incorrecto
+            res.json({ success: false, message: "Usuario o contraseña incorrectos" });
+        }
     });
 });
 
-app.use(express.static(path.join(__dirname, 'HACKATHON')));
+
+// Ruta para servir el archivo HTML de visualización de datos de Pacientes
+//app.get('/datosusuario-page', (req, res) => {
+  //  res.sendFile(path.join(__dirname, 'STASYSDEP/visualDatosPaciente.html'));
+//});
+
+app.use(express.static(path.join(__dirname, 'Nica-Turismo')));
 
 // Verificar la conexión a la base de datos
 conexion.connect(function(err) {

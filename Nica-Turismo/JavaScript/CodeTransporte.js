@@ -122,13 +122,13 @@ function renderTransportes(filtroRuta = "") {
 }
 
 // --- selección visual ---
-function seleccionarTransporte(transporte, card) {
-  if (cardSeleccionada) cardSeleccionada.classList.remove("selected");
-  cardSeleccionada = card;
-  card.classList.add("selected");
-  transporteSeleccionado = transporte;
-  if (reservarBtn) reservarBtn.disabled = false;
-}
+//function seleccionarTransporte(transporte, card) {
+  //if (cardSeleccionada) cardSeleccionada.classList.remove("selected");
+  //cardSeleccionada = card;
+  //card.classList.add("selected");
+  //transporteSeleccionado = transporte;
+  //if (reservarBtn) reservarBtn.disabled = false;
+//}
 
 // --- filtro: change del select ---
 rutaSelect.addEventListener("change", (e) => {
@@ -138,3 +138,114 @@ rutaSelect.addEventListener("change", (e) => {
 
 // --- inicio: todas ---
 renderTransportes();
+
+// ----------------- Carrito en localStorage -----------------
+function obtenerCarrito() {
+    return JSON.parse(localStorage.getItem("carritoReservas")) || [];
+}
+
+function guardarCarrito(carrito) {
+    localStorage.setItem("carritoReservas", JSON.stringify(carrito));
+}
+
+// Mostrar carrito en la UI
+function mostrarCarrito() {
+    const carrito = obtenerCarrito();
+    const contenedor = document.getElementById("carritoItems");
+    if (!contenedor) return;
+
+    contenedor.innerHTML = "";
+
+    if (carrito.length === 0) {
+        contenedor.innerHTML = "<p>Tu carrito está vacío</p>";
+        return;
+    }
+
+    carrito.forEach(item => {
+        const div = document.createElement("div");
+        div.classList.add("carrito-item");
+        div.innerHTML = `
+            <span>${item.nombre} x ${item.cantidad} (${item.tipo})</span>
+            <button class="btn btn-sm btn-danger" onclick="eliminarReserva('${item.id}', '${item.tipo}')">&times;</button>
+        `;
+        contenedor.appendChild(div);
+    });
+}
+
+// Agregar reserva al carrito
+function agregarAlCarrito(reserva) {
+    let carrito = obtenerCarrito();
+
+    const index = carrito.findIndex(item => item.id === reserva.id && item.tipo === reserva.tipo);
+    if (index !== -1) {
+        carrito[index].cantidad += reserva.cantidad;
+    } else {
+        carrito.push(reserva);
+    }
+
+    guardarCarrito(carrito);
+    mostrarCarrito();
+}
+
+// Eliminar reserva
+function eliminarReserva(id, tipo) {
+    let carrito = obtenerCarrito();
+    carrito = carrito.filter(item => !(item.id === id && item.tipo === tipo));
+    guardarCarrito(carrito);
+    mostrarCarrito();
+}
+
+// Limpiar carrito
+function limpiarCarrito() {
+    localStorage.removeItem("carritoReservas");
+    mostrarCarrito();
+}
+
+//let cardSeleccionada = null; // variable global para la tarjeta seleccionada
+
+function seleccionarTransporte(transporte, card) {
+    // 1️⃣ Actualizar modal
+    document.getElementById("transporteSeleccionadoTexto").textContent = transporte.nombre;
+
+    // 2️⃣ Habilitar botón y guardar id
+    const reservarBtn = document.getElementById("reservarBtn");
+    reservarBtn.disabled = false;
+    reservarBtn.dataset.id = transporte.id;
+
+    // 3️⃣ Manejar selección visual (resaltar tarjeta en verde)
+    if (cardSeleccionada) {
+        cardSeleccionada.classList.remove("selected"); // quitar estilo de la tarjeta anterior
+    }
+    cardSeleccionada = card;
+    card.classList.add("selected"); // agregar estilo a la tarjeta actual
+}
+
+
+// Confirmar reserva desde modal
+document.getElementById("confirmarReserva").addEventListener("click", () => {
+    const cantidad = parseInt(document.getElementById("cantidadBoletos").value);
+    const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
+    const id = document.getElementById("reservarBtn").dataset.id;
+
+    if (!id) return alert("No se ha seleccionado un transporte");
+
+    const reserva = {
+        id,
+        tipo: "transporte", // Cambiar a "restaurante" u otro tipo según la página
+        nombre,
+        cantidad
+    };
+
+    agregarAlCarrito(reserva);
+
+    // Cerrar modal automáticamente
+    const modalEl = document.getElementById('reservaModal');
+    const modal = bootstrap.Modal.getInstance(modalEl);
+    modal.hide();
+});
+
+// ----------------- Botón limpiar carrito -----------------
+document.getElementById("limpiarCarrito")?.addEventListener("click", limpiarCarrito);
+
+// ----------------- Inicializar carrito al cargar página -----------------
+document.addEventListener("DOMContentLoaded", mostrarCarrito);
