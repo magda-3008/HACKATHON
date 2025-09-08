@@ -329,3 +329,27 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    // Mostrar confirmación
+    if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+        // Eliminar datos de sesión del localStorage
+        localStorage.removeItem('userId');
+        localStorage.removeItem('usuario');
+        
+        // Redirigir al login
+        window.location.href = 'login.html';
+    }
+}
+
+// Configurar el evento para el botón de cerrar sesión
+document.addEventListener('DOMContentLoaded', function() {
+    // ... otro código que ya tienes ...
+    
+    // Configurar el botón de cerrar sesión
+    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+    if (btnCerrarSesion) {
+        btnCerrarSesion.addEventListener('click', cerrarSesion);
+    }
+});

@@ -44,7 +44,7 @@ async function Loguear() {
 
 //sign up
 async function registrar(event) {
-    event.preventDefault(); // evita que el formulario se envíe de forma tradicional
+    event.preventDefault();
 
     const nombre_usuario = document.getElementById("nuevo-usuario").value;
     const email = document.getElementById("correo").value;
@@ -64,7 +64,6 @@ async function registrar(event) {
         if (res.ok) {
             registroMessage.textContent = data.message;
             registroMessage.style.color = "green";
-            // Opcional: limpiar formulario
             document.getElementById("signup-form").reset();
         } else {
             registroMessage.textContent = data.error || "Error al registrar usuario";
