@@ -6,17 +6,28 @@ function acceder() {
 }
 
 //Login
-function Loguear() {
+async function Loguear() {
     let usuario = document.getElementById("usuario").value;
     let contraseña = document.getElementById("clave").value;
 
-    if (usuario == "Vero" && contraseña == "contraseña123") {
-        window.location = "home.html";
-    }
-    else {
-        const registroMessageLogin = document.getElementById('registro-messageLogin');
-        registroMessageLogin.textContent = 'Datos incorrectos. Verifique su usuario y contraseña.';
-        registroMessageLogin.style.color = 'red';
+    try {
+        const response = await fetch("/datosusuario", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ usuario, contraseña })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            window.location = "home.html"; // redirige si está correcto
+        } else {
+            const registroMessageLogin = document.getElementById('registro-messageLogin');
+            registroMessageLogin.textContent = data.message;
+            registroMessageLogin.style.color = 'red';
+        }
+    } catch (error) {
+        console.error("Error en login:", error);
     }
 }
 
@@ -55,4 +66,18 @@ async function registrar(event) {
     }
 }
 
+//mostrar u ocultar contraseña
+const togglePassword = document.getElementById("togglePassword");
+const inputClave = document.getElementById("clave");
 
+togglePassword.addEventListener("click", () => {
+    if (inputClave.type === "password") {
+        inputClave.type = "text";
+        togglePassword.classList.remove("bi-eye");
+        togglePassword.classList.add("bi-eye-slash");
+    } else {
+        inputClave.type = "password";
+        togglePassword.classList.remove("bi-eye-slash");
+        togglePassword.classList.add("bi-eye");
+    }
+});

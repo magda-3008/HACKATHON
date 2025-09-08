@@ -69,3 +69,19 @@ header{
   margin-bottom: 0.8rem;
   background: pink;
 }
+
+.carrito-flotante {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
