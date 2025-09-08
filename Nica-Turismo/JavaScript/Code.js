@@ -5,7 +5,7 @@ function acceder() {
 
 }
 
-//Login
+// Login
 async function Loguear() {
     let usuario = document.getElementById("usuario").value;
     let contraseña = document.getElementById("clave").value;
@@ -20,6 +20,17 @@ async function Loguear() {
         const data = await response.json();
 
         if (data.success) {
+            // Guardar información del usuario en localStorage
+            localStorage.setItem('usuario', usuario);
+            
+            // Obtener el ID del usuario para usarlo después
+            const userResponse = await fetch(`/obtenerusuariopornombre/${usuario}`);
+            const userData = await userResponse.json();
+            
+            if (userData.success) {
+                localStorage.setItem('userId', userData.usuario.id);
+            }
+            
             window.location = "home.html"; // redirige si está correcto
         } else {
             const registroMessageLogin = document.getElementById('registro-messageLogin');

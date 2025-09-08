@@ -50,11 +50,6 @@ header{
   box-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
 }
 
-.transport-card.selected {
-  border: 2px solid #198754;
-  background: #e9f7ef;
-}
-
 .transport-card h3 {
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
