@@ -1,0 +1,81 @@
+:root {
+  --header-h: 80px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  padding-top: var(--header-h);
+}
+
+header {
+  position: fixed;
+  top: 0;           
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: #26a9cabe; 
+}
+
+.header_nav {
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 16px; 
+}
+
+.header_nav img {
+  height: calc(var(--header-h) - 0px);
+  width: auto;
+}
+
+.nav_list {
+  display: flex;
+  justify-content: space-between;  
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0 40px;
+}
+
+.nav_list a {
+  text-decoration: none;
+  color: white;
+}
+
+.nav_list h4 {
+  font-size: 16px;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+}
+
+.Perfil h1 {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.perfil-image {
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Estilo para cuando la imagen no carga */
+.perfil-image:before {
+    content: "Foto no disponible";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+    color: #999;
+}

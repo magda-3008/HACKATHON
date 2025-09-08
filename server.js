@@ -1,8 +1,13 @@
 const express = require('express');
 const mysql = require('mysql');
 const path = require('path');
+const multer = require('multer');
+const fs = require('fs');
 
 const app = express();
+
+app.use(express.json({ limit: '10mb' })); // Aumenta el límite a 10MB
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Aumenta el límite a 10MB
 
 app.use(express.json()); // Para manejar datos JSON
 app.use(express.urlencoded({ extended: true })); // Para manejar datos codificados en formularios
@@ -16,15 +21,53 @@ const conexion = mysql.createConnection({
     database: 'nica_turismo_bdd'
 });
 
+// Configuración de multer para almacenar imágenes
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = 'uploads/profile/';
+    // Crear directorio si no existe
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Generar un nombre único para el archivo
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'user-' + req.params.id + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // Límite de 5MB
+  },
+  fileFilter: function (req, file, cb) {
+    // Solo permitir imágenes
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Solo se permiten imágenes'), false);
+    }
+  }
+});
+
+
 // Ruta para recibir datos del formulario y guardarlos en la base de datos
-app.post('/guardarusuario', (req, res) => {
+app.post('/guardarusuario', upload.single('foto_perfil'), (req, res) => {
     // Extraer los datos del cuerpo de la solicitud (formulario)
     const {
         nombre_usuario,
         email,
-        foto_perfil,
         contrasena
     } = req.body;
+
+    // Manejar la imagen si se proporcionó
+    let foto_perfil = null;
+    if (req.file) {
+        foto_perfil = req.file.path;
+    }
 
     // Query SQL para insertar los datos en la tabla datospersona
     const insertQuery = `
@@ -48,11 +91,15 @@ app.post('/guardarusuario', (req, res) => {
     conexion.query(insertQuery, values, (err, result) => {
         if (err) {
             console.error('Error al insertar datos:', err);
+            // Eliminar la imagen subida si hay error
+            if (req.file) {
+                fs.unlinkSync(req.file.path);
+            }
             res.status(500).json({ error: 'Error al insertar datos del usuario' });
             return;
         }
 
-        // Obtener el ID del paciente insertado
+        // Obtener el ID del usuario insertado
         const idUsuario = result.insertId;
 
         console.log('Datos del usuario insertados correctamente');
@@ -94,6 +141,157 @@ app.post('/datosusuario', (req, res) => {
     });
 });
 
+// Ruta para obtener datos del usuario por ID
+app.get('/obtenerusuario/:id', (req, res) => {
+    const userId = req.params.id;
+    
+    const query = "SELECT * FROM datos_usuario WHERE id = ?";
+    conexion.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+
+        if (result.length > 0) {
+            // Eliminamos la contraseña por seguridad
+            const usuario = { ...result[0] };
+            delete usuario.contrasena;
+            res.json({ success: true, usuario: usuario });
+        } else {
+            res.json({ success: false, message: "Usuario no encontrado" });
+        }
+    });
+});
+
+// Servir archivos estáticos desde la carpeta uploads
+app.use('/uploads', express.static('uploads'));
+
+// Ruta para subir imagen de perfil
+app.post('/subir-imagen-perfil/:id', upload.single('imagen'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No se proporcionó ninguna imagen válida' });
+  }
+  
+  const userId = req.params.id;
+  const imagePath = req.file.path;
+  
+  // Actualizar la base de datos con la ruta de la imagen
+  const query = "UPDATE datos_usuario SET foto_perfil = ? WHERE id = ?";
+  conexion.query(query, [imagePath, userId], (err, result) => {
+    if (err) {
+      console.error('Error al actualizar la imagen:', err);
+      // Eliminar la imagen subida si hay error en la BD
+      fs.unlinkSync(imagePath);
+      return res.status(500).json({ success: false, message: "Error al actualizar la imagen" });
+    }
+
+    if (result.affectedRows > 0) {
+      res.json({ success: true, message: "Imagen actualizada correctamente", imagePath: imagePath });
+    } else {
+      // Eliminar la imagen si no se actualizó el usuario
+      fs.unlinkSync(imagePath);
+      res.json({ success: false, message: "No se pudo actualizar la imagen" });
+    }
+  });
+});
+
+// Ruta para obtener imagen de perfil
+app.get('/imagen-perfil/:id', (req, res) => {
+  const userId = req.params.id;
+  
+  const query = "SELECT foto_perfil FROM datos_usuario WHERE id = ?";
+  conexion.query(query, [userId], (err, result) => {
+    if (err) {
+      console.error('Error al obtener la imagen:', err);
+      return res.status(500).json({ success: false, message: "Error al obtener la imagen" });
+    }
+
+    if (result.length > 0 && result[0].foto_perfil) {
+      // Verificar si el archivo existe
+      if (fs.existsSync(result[0].foto_perfil)) {
+        res.sendFile(path.resolve(result[0].foto_perfil));
+      } else {
+        // Si el archivo no existe, enviar imagen por defecto
+        res.sendFile(path.resolve('Resource/user.webp'));
+      }
+    } else {
+      // Si no hay imagen en la BD, enviar imagen por defecto
+      res.sendFile(path.resolve('Resource/user.webp'));
+    }
+  });
+});
+
+// Modifica la ruta de actualización de usuario para que no incluya la imagen
+app.put('/actualizarusuario/:id', (req, res) => {
+    const userId = req.params.id;
+    const { nombre_usuario, email } = req.body;
+
+    const query = "UPDATE datos_usuario SET nombre_usuario = ?, email = ? WHERE id = ?";
+    conexion.query(query, [nombre_usuario, email, userId], (err, result) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+
+        if (result.affectedRows > 0) {
+            res.json({ success: true, message: "Datos actualizados correctamente" });
+        } else {
+            res.json({ success: false, message: "No se pudo actualizar el usuario" });
+        }
+    });
+});
+
+// Ruta para cambiar contraseña
+app.put('/cambiarpassword/:id', (req, res) => {
+    const userId = req.params.id;
+    const { contrasena_actual, nueva_contrasena } = req.body;
+
+    // Primero verificamos que la contraseña actual sea correcta
+    const verifyQuery = "SELECT * FROM datos_usuario WHERE id = ? AND contrasena = ?";
+    conexion.query(verifyQuery, [userId, contrasena_actual], (err, result) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+
+        if (result.length > 0) {
+            // Si la contraseña actual es correcta, actualizamos
+            const updateQuery = "UPDATE datos_usuario SET contrasena = ? WHERE id = ?";
+            conexion.query(updateQuery, [nueva_contrasena, userId], (err, updateResult) => {
+                if (err) {
+                    console.error('Error en la consulta:', err);
+                    return res.status(500).json({ success: false, message: "Error en servidor" });
+                }
+
+                if (updateResult.affectedRows > 0) {
+                    res.json({ success: true, message: "Contraseña actualizada correctamente" });
+                } else {
+                    res.json({ success: false, message: "No se pudo actualizar la contraseña" });
+                }
+            });
+        } else {
+            res.json({ success: false, message: "Contraseña actual incorrecta" });
+        }
+    });
+});
+
+app.get('/obtenerusuariopornombre/:nombre', (req, res) => {
+    const nombreUsuario = req.params.nombre;
+    
+    const query = "SELECT * FROM datos_usuario WHERE nombre_usuario = ?";
+    conexion.query(query, [nombreUsuario], (err, result) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+
+        if (result.length > 0) {
+            res.json({ success: true, usuario: result[0] });
+        } else {
+            res.json({ success: false, message: "Usuario no encontrado" });
+        }
+    });
+});
 
 // Ruta para servir el archivo HTML de visualización de datos de Pacientes
 //app.get('/datosusuario-page', (req, res) => {
