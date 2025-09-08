@@ -1,4 +1,3 @@
-// --- Datos simulados por ruta (los tuyos) ---
 const TRANSPORTES_DATA = {
   "rio-san-juan": [
     { id: 1, nombre: "Lancha San Carlos - El Castillo", tipo: "Fluvial", precio: "$10", frecuencia: "Diaria" },
@@ -103,22 +102,45 @@ function renderTransportes(filtroRuta = "") {
       const col = document.createElement("div");
       col.className = "col-md-4";
       col.innerHTML = `
-        <div class="transport-card h-100">
-          <img src="${t.img || 'https://via.placeholder.com/600x300?text=Transporte'}" alt="Imagen de transporte" class="transport-img">
-          <h4>${t.nombre}</h4>
+        <div class="transport-card h-100 p-3 border rounded shadow-sm">
+          <img src="${t.img || 'https://via.placeholder.com/600x300?text=Transporte'}" 
+              alt="Imagen de transporte" class="transport-img mb-2">
+          <h4 class="h6">${t.nombre}</h4>
           <p class="mb-1"><span class="badge bg-secondary">${t.tipo}</span></p>
           <p class="mb-1">💵 ${t.precio}</p>
-          <p class="mb-0">⏰ ${t.frecuencia}</p>
+          <p class="mb-2">⏰ ${t.frecuencia}</p>
+          <button class="btn btn-success btn-sm reservar-btn" 
+                  data-id="${t.id}" 
+                  data-nombre="${t.nombre}">
+            Reservar
+          </button>
         </div>
       `;
-      const card = col.querySelector(".transport-card");
-      card.addEventListener("click", () => seleccionarTransporte(t, card));
       row.appendChild(col);
     });
 
     section.appendChild(row);
     transportContainer.appendChild(section);
-  });
+});
+
+// Delegación: escuchar clic en botones "Reservar"
+transportContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("reservar-btn")) {
+    const id = e.target.dataset.id;
+    const nombre = e.target.dataset.nombre;
+
+    // Guardar transporte seleccionado en el modal
+    document.getElementById("transporteSeleccionadoTexto").textContent = nombre;
+
+    // ⚠️ Ya no usamos reservarBtn global, lo guardamos en el modal directamente
+    document.getElementById("confirmarReserva").dataset.id = id;
+
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById("reservaModal"));
+    modal.show();
+  }
+});
+
 }
 
 // --- selección visual ---
@@ -223,25 +245,25 @@ function seleccionarTransporte(transporte, card) {
 
 // Confirmar reserva desde modal
 document.getElementById("confirmarReserva").addEventListener("click", () => {
-    const cantidad = parseInt(document.getElementById("cantidadBoletos").value);
-    const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
-    const id = document.getElementById("reservarBtn").dataset.id;
+  const cantidad = parseInt(document.getElementById("cantidadBoletos").value);
+  const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
+  const id = document.getElementById("confirmarReserva").dataset.id;
 
-    if (!id) return alert("No se ha seleccionado un transporte");
+  if (!id) return alert("No se ha seleccionado un transporte");
 
-    const reserva = {
-        id,
-        tipo: "transporte", // Cambiar a "restaurante" u otro tipo según la página
-        nombre,
-        cantidad
-    };
+  const reserva = {
+    id,
+    tipo: "transporte",
+    nombre,
+    cantidad
+  };
 
-    agregarAlCarrito(reserva);
+  agregarAlCarrito(reserva);
 
-    // Cerrar modal automáticamente
-    const modalEl = document.getElementById('reservaModal');
-    const modal = bootstrap.Modal.getInstance(modalEl);
-    modal.hide();
+  // Cerrar modal automáticamente
+  const modalEl = document.getElementById('reservaModal');
+  const modal = bootstrap.Modal.getInstance(modalEl);
+  modal.hide();
 });
 
 // ----------------- Botón limpiar carrito -----------------
