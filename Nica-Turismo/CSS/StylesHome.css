@@ -42,13 +42,12 @@ header{
 }
 
 .nav_list {
-    display: flex;
-    justify-content: flex-end;  /* ítems a la derecha dentro de su columna */
-    gap: 80px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    padding-right: 40px;
+  display: flex;
+  justify-content: space-between;  /* reparte el espacio disponible */
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0 40px;
 }
 
 .nav_list a {
