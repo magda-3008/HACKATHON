@@ -353,3 +353,149 @@ document.addEventListener('DOMContentLoaded', function() {
         btnCerrarSesion.addEventListener('click', cerrarSesion);
     }
 });
+
+// Datos de ejemplo para el historial de reservas
+const reservasData = [
+    { id: 1, nombre: "Lancha San Carlos - El Castillo", tipo: "Fluvial", precio: "$10", fecha: "2023-10-15", categoria: "rio-san-juan" },
+    { id: 2, nombre: "Tour en bote Reserva Indio Maíz", tipo: "Fluvial", precio: "$35", fecha: "2023-10-10", categoria: "rio-san-juan" },
+    { id: 3, nombre: "Ferry San Jorge - Ometepe", tipo: "Lacustre", precio: "$6", fecha: "2023-10-05", categoria: "gran-lago-cocibolca" },
+    { id: 4, nombre: "Lancha Isletas de Granada", tipo: "Lacustre", precio: "$5", fecha: "2023-10-03", categoria: "gran-lago-cocibolca" },
+    { id: 5, nombre: "Bus Estelí - Somoto", tipo: "Colectivo", precio: "$4", fecha: "2023-09-28", categoria: "segovianas" },
+    { id: 6, nombre: "Taxi Matagalpa - Jinotega", tipo: "Taxi compartido", precio: "$3", fecha: "2023-09-25", categoria: "matagalpinas" },
+    { id: 7, nombre: "Bus Jinotega - San Rafael del Norte", tipo: "Colectivo", precio: "$2.5", fecha: "2023-09-20", categoria: "jinoteganos" },
+    { id: 8, nombre: "Transporte Masaya - Volcán Masaya", tipo: "Tour", precio: "$12", fecha: "2023-09-15", categoria: "volcanes" },
+    { id: 9, nombre: "Bus Granada - León", tipo: "Colectivo", precio: "$6", fecha: "2023-09-10", categoria: "ciudades-patrimoniales" },
+    { id: 10, nombre: "Bus Masaya - San Juan de Oriente", tipo: "Colectivo", precio: "$1", fecha: "2023-09-05", categoria: "pueblos-artesanos" },
+    { id: 11, nombre: "Shuttle Managua - San Juan del Sur", tipo: "Privado", precio: "$15", fecha: "2023-09-01", categoria: "playeras" },
+    { id: 12, nombre: "Vuelo Managua - Bluefields", tipo: "Aéreo", precio: "$80", fecha: "2023-08-28", categoria: "caribenas" },
+    { id: 13, nombre: "Tour Gastronómico León", tipo: "Privado", precio: "$25", fecha: "2023-08-25", categoria: "gastronomica" },
+    { id: 14, nombre: "Bus Juigalpa - Boaco", tipo: "Colectivo", precio: "$2.5", fecha: "2023-08-20", categoria: "boaquena-chontalenas" }
+];
+
+// Variables para paginación y filtros
+let paginaActual = 1;
+const reservasPorPagina = 5;
+let reservasFiltradas = [];
+
+// Función para formatear fechas
+function formatearFecha(fechaStr) {
+    const fecha = new Date(fechaStr);
+    return fecha.toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+// Función para cargar las reservas en la tabla
+function cargarReservas() {
+    const cuerpoTabla = document.getElementById('cuerpoTablaReservas');
+    cuerpoTabla.innerHTML = '';
+    
+    const inicio = (paginaActual - 1) * reservasPorPagina;
+    const fin = inicio + reservasPorPagina;
+    const reservasPagina = reservasFiltradas.slice(inicio, fin);
+    
+    if (reservasPagina.length === 0) {
+        document.getElementById('sinResultados').classList.remove('d-none');
+        document.getElementById('tablaReservas').classList.add('d-none');
+        document.getElementById('paginacion').classList.add('d-none');
+        return;
+    }
+    
+    document.getElementById('sinResultados').classList.add('d-none');
+    document.getElementById('tablaReservas').classList.remove('d-none');
+    document.getElementById('paginacion').classList.remove('d-none');
+    
+    reservasPagina.forEach(reserva => {
+        const fila = document.createElement('tr');
+        
+        // Formatear la categoría para mostrar
+        let categoriaMostrar = reserva.categoria;
+        if (reserva.categoria === 'rio-san-juan') categoriaMostrar = 'Río San Juan';
+        else if (reserva.categoria === 'gran-lago-cocibolca') categoriaMostrar = 'Gran Lago Cocibolca';
+        else if (reserva.categoria === 'ciudades-patrimoniales') categoriaMostrar = 'Ciudades Patrimoniales';
+        else if (reserva.categoria === 'pueblos-artesanos') categoriaMostrar = 'Pueblos Artesanos';
+        else if (reserva.categoria === 'boaquena-chontalenas') categoriaMostrar = 'Boaqueña-Chontalenas';
+        else categoriaMostrar = reserva.categoria.charAt(0).toUpperCase() + reserva.categoria.slice(1);
+        
+        fila.innerHTML = `
+            <td>${reserva.id}</td>
+            <td>${reserva.nombre}</td>
+            <td><span class="badge bg-secondary">${reserva.tipo}</span></td>
+            <td><span class="badge bg-success">${reserva.precio}</span></td>
+            <td>${formatearFecha(reserva.fecha)}</td>
+            <td><span class="badge bg-info text-dark">${categoriaMostrar}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary me-1" onclick="verDetallesReserva(${reserva.id})">
+                    <i class="bi bi-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="cancelarReserva(${reserva.id})">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </td>
+        `;
+        
+        cuerpoTabla.appendChild(fila);
+    });
+    
+    actualizarPaginacion();
+}
+
+// Función para actualizar la paginación
+function actualizarPaginacion() {
+    const totalPaginas = Math.ceil(reservasFiltradas.length / reservasPorPagina);
+    const paginacion = document.getElementById('paginacion');
+    paginacion.innerHTML = '';
+    
+    // Botón anterior
+    const liAnterior = document.createElement('li');
+    liAnterior.classList.add('page-item', paginaActual === 1 ? 'disabled' : '');
+    liAnterior.innerHTML = `<a class="page-link" href="#" onclick="cambiarPagina(${paginaActual - 1})">Anterior</a>`;
+    paginacion.appendChild(liAnterior);
+    
+    // Números de página
+    for (let i = 1; i <= totalPaginas; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item', i === paginaActual ? 'active' : '');
+        li.innerHTML = `<a class="page-link" href="#" onclick="cambiarPagina(${i})">${i}</a>`;
+        paginacion.appendChild(li);
+    }
+    
+    // Botón siguiente
+    const liSiguiente = document.createElement('li');
+    liSiguiente.classList.add('page-item', paginaActual === totalPaginas ? 'disabled' : '');
+    liSiguiente.innerHTML = `<a class="page-link" href="#" onclick="cambiarPagina(${paginaActual + 1})">Siguiente</a>`;
+    paginacion.appendChild(liSiguiente);
+}
+
+// Función para cambiar de página
+function cambiarPagina(pagina) {
+    paginaActual = pagina;
+    cargarReservas();
+    window.scrollTo({ top: document.getElementById('tablaReservas').offsetTop - 100, behavior: 'smooth' });
+}
+
+// Funciones para las acciones de reserva (simuladas)
+function verDetallesReserva(id) {
+    const reserva = reservasData.find(r => r.id === id);
+    alert(`Detalles de la reserva:\n\nID: ${reserva.id}\nServicio: ${reserva.nombre}\nTipo: ${reserva.tipo}\nPrecio: ${reserva.precio}\nFecha: ${formatearFecha(reserva.fecha)}`);
+}
+
+function cancelarReserva(id) {
+    if (confirm('¿Estás seguro de que deseas cancelar esta reserva?')) {
+        alert(`Reserva #${id} cancelada exitosamente.`);
+        // En una implementación real, aquí harías una llamada a tu API
+    }
+}
+
+// Inicializar la sección de reservas cuando se cargue la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar con todas las reservas
+    reservasFiltradas = [...reservasData];
+    cargarReservas();
+    
+    // Configurar event listeners para los filtros
+    document.getElementById('filtroCategoria').addEventListener('change', filtrarReservas);
+    document.getElementById('buscarReserva').addEventListener('input', filtrarReservas);
+});
