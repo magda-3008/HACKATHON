@@ -48,7 +48,7 @@ async function registrar(event) {
 
     const nombre_usuario = document.getElementById("nuevo-usuario").value;
     const email = document.getElementById("correo").value;
-    const contrasena = document.getElementById("nueva-clave").value;
+    const contrasena = document.getElementById("clave").value;
 
     const registroMessage = document.getElementById("registro-message");
 
