@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- Bootstrap pal botón -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../CSS/StylesHome2.css">
+    <script src="../JavaScript/CodeHome.js"></script>
+    
+</head>
+<body>
+
+   <header>
+    <div class="header">
+        <div class="menu container">
+            <input type="checkbox" id="menu">
+            <label for="menu">
+                <img src="../Resource/Captura_de_pantalla_2025-09-06_013727-removebg-preview.png" alt="menu" class="menu-icono">
+            </label>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#">Servicios</a></li>
+                    <li><a href="#">Productos</a></li>
+                    <li><a href="#">Reservaciones</a></li>
+                    <li><a href="#">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Texto central -->
+        <div class="header-content container">
+            <div class="header-txt">
+                <h1>ELIGE TU PLAYA <br> FAVORITA <br> AHORA</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                   Doloribus dolores a, rem cumque similique rerum optio.</p>
+                <a href="#" class="btn btn-primary btn-lg rounded-pill">SECCIÓN MENU</a>
+            </div>
+        </div>
+
+        <!-- Carrusel -->
+        <div class="images">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="../Resource/lakenicaraguadt.jpeg">
+                        <h3>Lagos</h3>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../Resource/Corn-Island-Nicaragua-feature.jpeg">
+                        <h3>Islas</h3>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../Resource/f805846970e46e6269cb7dda6dabf634.png">
+                        <h3>Reservas</h3>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../Resource/83956321_b674a4ca4a_b.jpg">
+                        <h3>Playas</h3>
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="../Resource/granada.jpg">
+                        <h3>Ciudades</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flechas -->
+        <div class="rows">
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </div>
+</header>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper(".mySwiper", {
+  slidesPerView: 1,
+  centeredSlides: true,
+  loop: true,
+  loopedSlides: 2, // añade más clones
+  spaceBetween: 30,
+  grabCursor: true,
+  navigation: {
+    nextEl: ".swiper-button-next",
+    prevEl: ".swiper-button-prev",
+  },
+  breakpoints: {
+    991: {
+      slidesPerView: 3,
+    }
+  }
+});
+
+</script>
+</body>
+</html>
