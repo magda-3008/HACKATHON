@@ -16,7 +16,9 @@ body{
 }
 
 .header{
-    background-image: url(../Resource/SanJuanDelSur.webp);
+    background-image: url(../Resource/LagunaDePerlas.jpg);
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -29,30 +31,39 @@ body{
 .menu {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 10;
     right: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
+    padding: 20px 5%;
+    width: 100%;
 }
 
-.logo {
-    color: #ffffff;
-    font-size: 25px;
-    font-weight: bold;
+.menu .navbar ul {
+    display: flex;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 0;
+    gap: 60px;
 }
 
 .menu .navbar ul li {
     position: relative;
-    float: left;
+    justify-content: flex-end;
+    padding: 0 0;
+    margin: 0 0;
+    padding-top: 5px;
+    
 }
 
 .menu .navbar ul li a {
     font-size: 18px;
-    padding: 20px;
+    padding: 0 20px;
     color: #ffffff;
     display: block;
     font-weight: bold;
+    text-decoration: none;
+    margin: 0 0;
 }
 
 .menu .navbar ul li a:hover {
@@ -64,7 +75,9 @@ body{
 }
 
 .menu-icono{
-    width: 25px;
+    width: 100px;
+    height: auto;
+    padding-bottom: 620px;
 }
 
 .menu label {
@@ -74,23 +87,27 @@ body{
 
 .header-txt{
     width: 40%;
+    margin-left: -30px;
 }
 
 .header-txt h1{
-    font-size: 70px;
+    font-size: 60px;
     line-height: 80px;
     font-weight: 700;
     text-transform: uppercase;
-    color: #ffffff;
+    color: #124955;
+    margin-top: 50px;
     margin-bottom: 25px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .header-txt p{
-    font-size: 18px;
+    font-size: 16px;
     color: #ffffff;
     font-weight: 500;
     margin-bottom: 25px;
+    text-align: justify;
+    font-weight: bold;
 }
 
 .images {
@@ -120,6 +137,7 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 40px;
     text-transform: uppercase;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);
 }
 
 .swiper-slide img{
@@ -133,8 +151,8 @@ body{
 .rows {
     width: 180px;
     position: absolute;
-    right: 520px;
-    bottom: 280px;
+    right: 620px;
+    bottom: 110px;
 }
 
 .swiper-button-prev{
@@ -161,4 +179,21 @@ body{
 .swiper-button-next::after{
     font-size: 25px;
     color: #ffffff;
+}
+
+.boton{
+    margin: 7px;
+    background-color: #65afeb;
+    border: 0px;
+    padding: 5px;
+    color: white;
+    margin-right: 10px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.boton:hover{
+    background-color: white;
+    color: #65afeb;
 }

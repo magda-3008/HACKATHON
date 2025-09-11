@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 async function editarPerfil(e) {
     e.preventDefault();
     
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
     const nombre = document.getElementById('editarNombre').value;
     const email = document.getElementById('editarCorreo').value;
     const imagenInput = document.getElementById('editarImagen');
@@ -107,7 +107,6 @@ async function editarPerfil(e) {
                 
                 if (!passwordData.success) {
                     alert('Perfil actualizado pero error al cambiar contraseña: ' + passwordData.message);
-                    // No return aquí, queremos mostrar el mensaje de éxito del perfil
                 }
             } catch (error) {
                 console.error('Error al cambiar contraseña:', error);
@@ -169,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Función para cargar los datos del usuario
 async function cargarDatosUsuario() {
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
     
     if (!userId) {
         alert('Usuario no identificado. Por favor, inicie sesión nuevamente.');
@@ -242,7 +241,7 @@ async function subirImagenPerfil(userId, file) {
 async function cambiarContrasena(e) {
     e.preventDefault();
     
-    const userId = localStorage.getItem('userId');
+    const userId = sessionStorageStorage.getItem('userId');
     const contrasenaActual = document.getElementById('contrasenaActual').value;
     const nuevaContrasena = document.getElementById('nuevaContrasena').value;
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
@@ -334,12 +333,12 @@ document.addEventListener('DOMContentLoaded', function() {
 function cerrarSesion() {
     // Mostrar confirmación
     if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
-        // Eliminar datos de sesión del localStorage
-        localStorage.removeItem('userId');
-        localStorage.removeItem('usuario');
+        // Eliminar datos de sesión del sessionStorage
+        sessionStorage.removeItem('userId');
+        sessionStorage.removeItem('usuario');
         
         // Redirigir al login
-        window.location.href = 'login.html';
+        window.location.href = 'home2.html';
     }
 }
 

@@ -42,6 +42,12 @@ header {
 .nav_list a {
   text-decoration: none;
   color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+
+.nav_list a:hover {
+  color: #266371;
 }
 
 .nav_list h4 {
