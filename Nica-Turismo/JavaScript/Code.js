@@ -20,18 +20,18 @@ async function Loguear() {
         const data = await response.json();
 
         if (data.success) {
-            // Guardar información del usuario en localStorage
-            localStorage.setItem('usuario', usuario);
+            // Guardar información del usuario en sessionStorage
+            sessionStorage.setItem('usuario', usuario);
             
             // Obtener el ID del usuario para usarlo después
             const userResponse = await fetch(`/obtenerusuariopornombre/${usuario}`);
             const userData = await userResponse.json();
             
             if (userData.success) {
-                localStorage.setItem('userId', userData.usuario.id);
+                sessionStorage.setItem('userId', userData.usuario.id);
             }
             
-            window.location = "home.html"; // redirige si está correcto
+            window.location = "home2.html"; // redirige si está correcto
         } else {
             const registroMessageLogin = document.getElementById('registro-messageLogin');
             registroMessageLogin.textContent = data.message;

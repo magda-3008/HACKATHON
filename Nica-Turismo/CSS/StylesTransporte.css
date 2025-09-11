@@ -1,3 +1,13 @@
+:root {
+  --header-h: 80px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  padding-top: var(--header-h);
+}
+
 header{
     position: fixed;
     top: 0;           /* ← anclado arriba */
@@ -27,7 +37,11 @@ header{
 
 .nav_list a {
     text-decoration: none;
-    color: black;
+    color: white;
+}
+
+.nav_list a:hover {
+  color: #266371;
 }
 
 .nav_list h4 {

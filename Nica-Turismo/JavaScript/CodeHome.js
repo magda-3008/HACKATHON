@@ -1,16 +1,14 @@
-var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 1,
-        centeredSlides:true,
-        loop:true,
-        spaceBetween: 30,
-        grabCursor:true,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        breakpoints: {
-            991: {
-                slidesPerView: 3,
-            }
-        },
-    });
+document.addEventListener("DOMContentLoaded", () => {
+    const perfilItem = document.getElementById("perfilItem");
+
+    // Revisar si hay sesión iniciada
+    const userId = sessionStorage.getItem("userId");
+
+    if (userId) {
+        // Usuario logueado → mostrar perfil
+        perfilItem.innerHTML = `<a href="perfilusuario.html">Mi perfil</a>`;
+    } else {
+        // Usuario NO logueado → mostrar registrarse
+        perfilItem.innerHTML = `<a href="signup.html">Regístrate</a>`;
+    }
+});
