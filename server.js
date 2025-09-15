@@ -293,12 +293,45 @@ app.get('/obtenerusuariopornombre/:nombre', (req, res) => {
     });
 });
 
+// Obtener transportes con su ruta
+app.get("/transportes", (req, res) => {
+    const query = `
+        SELECT t.id, t.nombre, t.tipo, t.precio, t.modalidad AS frecuencia,
+               t.imagen_url AS img, t.id_ruta, r.nombre AS ruta_nombre
+        FROM transporte t
+        INNER JOIN ruta_turistica r ON t.id_ruta = r.id_ruta
+    `;
+
+    conexion.query(query, (err, rows) => {
+        if (err) {
+            console.error("Error al obtener transportes:", err);
+            return res.status(500).json({ error: "Error al obtener transportes" });
+        }
+
+        const transportesPorRuta = {};
+        const rutas = {};
+
+        rows.forEach(row => {
+            const rutaId = row.id_ruta;
+
+            if (!transportesPorRuta[rutaId]) transportesPorRuta[rutaId] = [];
+            transportesPorRuta[rutaId].push(row);
+
+            rutas[rutaId] = row.ruta_nombre;
+        });
+
+        res.json({ transportes: transportesPorRuta, rutas });
+    });
+});
+
 // Ruta para servir el archivo HTML de visualización de datos de Pacientes
 //app.get('/datosusuario-page', (req, res) => {
   //  res.sendFile(path.join(__dirname, 'STASYSDEP/visualDatosPaciente.html'));
 //});
 
 app.use(express.static(path.join(__dirname, 'Nica-Turismo')));
+
+app.use('/uploads/transporte', express.static(path.join(__dirname, '/uploads/transporte')));
 
 // Verificar la conexión a la base de datos
 conexion.connect(function(err) {

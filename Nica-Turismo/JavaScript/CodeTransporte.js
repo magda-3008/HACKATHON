@@ -1,127 +1,111 @@
-const TRANSPORTES_DATA = {
-  "rio-san-juan": [
-    { id: 1, nombre: "Lancha San Carlos - El Castillo", tipo: "Fluvial", precio: "$10", frecuencia: "Diaria" },
-    { id: 2, nombre: "Tour en bote Reserva Indio Maíz", tipo: "Fluvial", precio: "$35", frecuencia: "Bajo reserva" }
-  ],
-  "gran-lago-cocibolca": [
-    { id: 3, nombre: "Ferry San Jorge - Ometepe", tipo: "Lacustre", precio: "$6", frecuencia: "Varios horarios" },
-    { id: 4, nombre: "Lancha Isletas de Granada", tipo: "Lacustre", precio: "$5", frecuencia: "Cada hora" }
-  ],
-  "segovianas": [
-    { id: 5, nombre: "Bus Estelí - Somoto", tipo: "Colectivo", precio: "$4", frecuencia: "Cada 30 min" }
-  ],
-  "matagalpinas": [
-    { id: 6, nombre: "Taxi Matagalpa - Jinotega", tipo: "Taxi compartido", precio: "$3", frecuencia: "Cada 20 min" }
-  ],
-  "jinoteganos": [
-    { id: 7, nombre: "Bus Jinotega - San Rafael del Norte", tipo: "Colectivo", precio: "$2.5", frecuencia: "Cada 40 min" }
-  ],
-  "volcanes": [
-    { id: 8, nombre: "Transporte Masaya - Volcán Masaya", tipo: "Tour", precio: "$12", frecuencia: "2 veces al día" }
-  ],
-  "ciudades-patrimoniales": [
-    { id: 9, nombre: "Bus Granada - León", tipo: "Colectivo", precio: "$6", frecuencia: "Cada hora" }
-  ],
-  "pueblos-artesanos": [
-    { id: 10, nombre: "Bus Masaya - San Juan de Oriente", tipo: "Colectivo", precio: "$1", frecuencia: "Cada 15 min" }
-  ],
-  "playeras": [
-    { id: 11, nombre: "Shuttle Managua - San Juan del Sur", tipo: "Privado", precio: "$15", frecuencia: "2 veces al día" }
-  ],
-  "caribenas": [
-    { id: 12, nombre: "Vuelo Managua - Bluefields", tipo: "Aéreo", precio: "$80", frecuencia: "Diario" }
-  ],
-  "gastronomica": [
-    { id: 13, nombre: "Tour Gastronómico León", tipo: "Privado", precio: "$25", frecuencia: "Fines de semana" }
-  ],
-  "boaquena-chontalenas": [
-    { id: 14, nombre: "Bus Juigalpa - Boaco", tipo: "Colectivo", precio: "$2.5", frecuencia: "Cada 30 min" }
-  ]
-};
-
-const RUTA_NOMBRES = {
-  "rio-san-juan": "Rutas de nuestro Río San Juan",
-  "gran-lago-cocibolca": "Nuestro Gran Lago Cocibolca",
-  "segovianas": "Rutas Segovianas",
-  "matagalpinas": "Rutas Matagalpinas",
-  "jinoteganos": "Paisajes Jinoteganos",
-  "volcanes": "Ruta de los Volcanes",
-  "ciudades-patrimoniales": "Rutas de Ciudades Patrimoniales",
-  "pueblos-artesanos": "Ruta de los Pueblos Artesanos",
-  "playeras": "Rutas Playeras",
-  "caribenas": "Rutas Caribeñas",
-  "gastronomica": "Ruta Gastronómica",
-  "boaquena-chontalenas": "Ruta Boaqueña y Chontaleñas"
-};
-
 // --- refs DOM ---
 const transportContainer = document.getElementById("transportContainer");
 const rutaSelect = document.getElementById("rutaSelect");
-const reservarBtn = document.getElementById("reservarBtn"); // si no existe, quita estas 3 líneas
 let transporteSeleccionado = null;
 let cardSeleccionada = null;
 
+let TRANSPORTES_DATA = {};
+let RUTA_NOMBRES = {};
+
+async function cargarTransportes() {
+  try {
+    const res = await fetch("/transportes");
+    const data = await res.json();
+
+    TRANSPORTES_DATA = data.transportes || {};
+    RUTA_NOMBRES = data.rutas || {};
+
+    renderTransportes(); // dibujar
+  } catch (error) {
+    console.error("Error cargando transportes:", error);
+    document.getElementById("transportContainer").innerHTML = `
+      <div class="alert alert-danger">Error al cargar transportes</div>
+    `;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTransportes();
+  mostrarCarrito();
+});
+
 // --- render principal (con filtro) ---
 function renderTransportes(filtroRuta = "") {
-  // reset selección al cambiar filtro
-  transporteSeleccionado = null;
-  if (cardSeleccionada) cardSeleccionada.classList.remove("selected");
-  cardSeleccionada = null;
-  if (reservarBtn) reservarBtn.disabled = true;
+    transporteSeleccionado = null;
+    if (cardSeleccionada) cardSeleccionada.classList.remove("selected");
+    cardSeleccionada = null;
 
-  transportContainer.innerHTML = "";
+    transportContainer.innerHTML = "";
 
-  // determinar qué rutas pintar
-  const keys = filtroRuta
-    ? (TRANSPORTES_DATA[filtroRuta] ? [filtroRuta] : [])   // si el slug no existe, no rompe
-    : Object.keys(TRANSPORTES_DATA);
+    // determinar qué rutas pintar
+    const keys = filtroRuta
+        ? (TRANSPORTES_DATA[filtroRuta] ? [filtroRuta] : [])
+        : Object.keys(TRANSPORTES_DATA);
 
-  // si no hay coincidencias, mostrar vacío amigable
-  if (keys.length === 0) {
-    transportContainer.innerHTML = `<div class="alert alert-warning">No hay transportes para esta ruta.</div>`;
-    return;
-  }
+    if (keys.length === 0) {
+        transportContainer.innerHTML = `<div class="alert alert-warning">No hay transportes para esta ruta.</div>`;
+        return;
+    }
 
-  // pintar secciones por ruta
-  keys.forEach(key => {
-    const lista = TRANSPORTES_DATA[key] || [];
-    if (!lista.length) return;
+    // Recorrer cada ruta
+    keys.forEach(rutaSlug => {
+        const rutaNombre = RUTA_NOMBRES[rutaSlug] || "Ruta desconocida";
+        const transportes = TRANSPORTES_DATA[rutaSlug];
 
-    const section = document.createElement("section");
-    section.className = "mb-4";
+        // Crear título de la ruta
+        const rutaDiv = document.createElement("div");
+        rutaDiv.classList.add("ruta-section", "mb-4");
+        rutaDiv.innerHTML = `<h3 class="mb-3">${rutaNombre}</h3>`;
 
-    const h3 = document.createElement("h3");
-    h3.className = "text-primary mb-3";
-    h3.textContent = RUTA_NOMBRES[key] || key;
-    section.appendChild(h3);
+        // Contenedor de tarjetas de transporte para esta ruta
+        const cardsContainer = document.createElement("div");
+        cardsContainer.classList.add("d-flex", "flex-wrap", "gap-3");
 
-    const row = document.createElement("div");
-    row.className = "row g-3";
+        // Pintar cada transporte
+       // Pintar cada transporte
+transportes.forEach(transporte => {
+    const card = document.createElement("div");
+    card.classList.add("card", "p-2");
+    card.style.width = "18rem";
 
-    lista.forEach(t => {
-      const col = document.createElement("div");
-      col.className = "col-md-4";
-      col.innerHTML = `
-        <div class="transport-card h-100 p-3 border rounded shadow-sm">
-          <img src="${t.img || 'https://via.placeholder.com/600x300?text=Transporte'}" 
-              alt="Imagen de transporte" class="transport-img mb-2">
-          <h4 class="h6">${t.nombre}</h4>
-          <p class="mb-1"><span class="badge bg-secondary">${t.tipo}</span></p>
-          <p class="mb-1">💵 ${t.precio}</p>
-          <p class="mb-2">⏰ ${t.frecuencia}</p>
-          <button class="btn btn-success btn-sm reservar-btn" 
-                  data-id="${t.id}" 
-                  data-nombre="${t.nombre}">
-            Reservar
-          </button>
+    // Contenido de la imagen o mensaje
+    let imgContent;
+    if (transporte.img && transporte.img.trim() !== "") {
+        imgContent = `<img src="${transporte.img}" class="card-img-top" alt="${transporte.nombre}" height="200" width="100%" style="object-fit:cover;">`;
+    } else {
+        imgContent = `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height:200px;">
+                          Imagen no disponible
+                      </div>`;
+    }
+
+    card.innerHTML = `
+        ${imgContent}
+        <div class="card-body">
+            <h5 class="card-title">${transporte.nombre}</h5>
+            <p class="card-text">Tipo: ${transporte.tipo}</p>
+            <p class="card-text">Frecuencia: ${transporte.frecuencia}</p>
+            <p class="card-text">Precio: C$ ${transporte.precio}</p>
+            <button class="btn btn-primary reservar-btn" data-id="${transporte.id}" data-nombre="${transporte.nombre}">Reservar</button>
         </div>
-      `;
-      row.appendChild(col);
-    });
+    `;
 
-    section.appendChild(row);
-    transportContainer.appendChild(section);
+    // Click para selección visual
+    card.addEventListener("click", () => seleccionarTransporte(transporte, card));
+
+    cardsContainer.appendChild(card);
 });
+
+        // Agregar contenedor de tarjetas a la sección de la ruta
+        rutaDiv.appendChild(cardsContainer);
+        transportContainer.appendChild(rutaDiv);
+    });
+}
+
+// Llamar al cargar la página
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTransportes();
+  mostrarCarrito();
+}); 
 
 // Delegación: escuchar clic en botones "Reservar"
 transportContainer.addEventListener("click", (e) => {
@@ -141,8 +125,6 @@ transportContainer.addEventListener("click", (e) => {
   }
 });
 
-}
-
 // --- selección visual ---
 //function seleccionarTransporte(transporte, card) {
   //if (cardSeleccionada) cardSeleccionada.classList.remove("selected");
@@ -154,8 +136,8 @@ transportContainer.addEventListener("click", (e) => {
 
 // --- filtro: change del select ---
 rutaSelect.addEventListener("change", (e) => {
-  const slug = e.target.value;   // "" = todas
-  renderTransportes(slug);
+  const idRuta = e.target.value; // "" = todas
+  renderTransportes(idRuta);
 });
 
 // --- inicio: todas ---
