@@ -56,6 +56,27 @@
       <h2 class="section-title">
         <i class="fas fa-history"></i> Historial de reservas recientes
       </h2>
+
+       <!-- Filtros para el historial -->
+      <div class="filtros-container mb-3">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="filtroServicio" class="form-label">Filtrar por tipo de servicio:</label>
+            <select id="filtroServicio" class="form-select">
+              <option value="todos">Todos los servicios</option>
+              <!-- Las opciones se cargarán dinámicamente -->
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="ordenFecha" class="form-label">Ordenar por fecha:</label>
+            <select id="ordenFecha" class="form-select">
+              <option value="recientes">Más recientes primero</option>
+              <option value="antiguos">Más antiguos primero</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- Aquí luego conectamos con el backend -->
       <table class="reservations-table">
     <thead>

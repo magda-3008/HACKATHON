@@ -324,6 +324,55 @@ app.get("/transportes", (req, res) => {
     });
 });
 
+//Reserva de transporte
+// POST /reservar-transporte
+// app.post("/reservar-transporte", (req, res) => {
+//     const { userId, idTransporte, fechaInicio, cant_cupos } = req.body;
+
+//     // Validación básica
+//     if (!userId || !idTransporte || !fechaInicio || !cant_cupos) {
+//         return res.status(400).json({ error: "Datos incompletos" });
+//     }
+
+//     // 1️⃣ Verificar si el transporte ya está reservado para esa fecha
+//     const sqlCheck = `
+//         SELECT COUNT(*) AS total
+//         FROM historial_reservas
+//         WHERE tipo_servicio = 'Transporte'
+//           AND id_servicio = ?
+//           AND fecha_inicio = ?
+//           AND estado != 'Cancelada'
+//     `;
+
+//     conexion.query(sqlCheck, [idTransporte, fechaInicio], (err, results) => {
+//         if (err) {
+//             console.error("Error al consultar disponibilidad:", err);
+//             return res.status(500).json({ error: "Error al consultar disponibilidad" });
+//         }
+
+//         if (results[0].total > 0) {
+//             return res.status(400).json({ disponible: false, mensaje: "Transporte no disponible para esa fecha" });
+//         }
+
+//         // 2️⃣ Insertar reserva en historial_reservas
+//         const sqlInsert = `
+//             INSERT INTO historial_reservas 
+//             (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
+//             VALUES (?, 'Transporte', ?, NOW(), ?, 'Pendiente', ?)
+//         `;
+
+//         conexion.query(sqlInsert, [userId, idTransporte, fechaInicio, cant_cupos], (err2, result2) => {
+//             if (err2) {
+//                 console.error("Error al insertar reserva:", err2);
+//                 return res.status(500).json({ error: "Error al guardar la reserva" });
+//             }
+
+//             // ✅ Respuesta exitosa
+//             res.json({ disponible: true, mensaje: "Reserva confirmada" });
+//         });
+//     });
+// });
+
 // Ruta para obtener reservas de un usuario por ID
 app.get('/obtenerreservas/:id', (req, res) => {
     const userId = req.params.id;
@@ -349,6 +398,32 @@ app.get('/obtenerreservas/:id', (req, res) => {
     });
 });
 
+app.post("/confirmar-pago", async (req, res) => {
+    const { idUsuario, reservas } = req.body;
+
+    if (!idUsuario || !reservas || !Array.isArray(reservas) || reservas.length === 0) {
+        return res.status(400).json({ success: false, mensaje: "Datos incompletos" });
+    }
+
+    try {
+        for (let r of reservas) {
+            const { id: idTransporte, cantidad } = r;
+
+            // Puedes agregar validación de disponibilidad si quieres
+            await conexion.query(`
+                INSERT INTO historial_reservas
+                (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
+                VALUES (?, 'Transporte', ?, NOW(), NOW(), 'Pendiente', ?)
+            `, [idUsuario, idTransporte, cantidad]);
+        }
+
+        res.json({ success: true, mensaje: "Reservas guardadas correctamente" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, mensaje: "Error al guardar reservas" });
+    }
+});
+
 app.put('/cancelarreserva/:id', (req, res) => {
     const { id } = req.params;
     const query = "UPDATE historial_reservas SET estado = 'Cancelada' WHERE id = ?";
@@ -368,6 +443,7 @@ app.put('/cancelarreserva/:id', (req, res) => {
 //});
 
 app.use(express.static(path.join(__dirname, 'Nica-Turismo')));
+app.use(express.static(path.join(__dirname, 'public'))); // sirve transporte.html
 
 app.use('/uploads/transporte', express.static(path.join(__dirname, '/uploads/transporte')));
 

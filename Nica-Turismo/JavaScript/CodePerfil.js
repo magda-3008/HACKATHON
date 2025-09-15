@@ -241,7 +241,7 @@ async function subirImagenPerfil(userId, file) {
 async function cambiarContrasena(e) {
     e.preventDefault();
     
-    const userId = sessionStorageStorage.getItem('userId');
+    const userId = sessionStorage.getItem('userId');
     const contrasenaActual = document.getElementById('contrasenaActual').value;
     const nuevaContrasena = document.getElementById('nuevaContrasena').value;
     const confirmarContrasena = document.getElementById('confirmarContrasena').value;
@@ -354,8 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-////Historial de reservas
-
+// Historial de reservas
 let reservasData = [];
 let reservasFiltradas = [];
 let paginaActual = 1;
@@ -369,6 +368,65 @@ function formatearFecha(fecha) {
         month: "2-digit",
         day: "2-digit"
     });
+}
+
+// 🔹 Obtener tipos de servicio únicos
+function obtenerTiposServicio() {
+    const tipos = [...new Set(reservasData.map(reserva => reserva.tipo_servicio))];
+    return tipos;
+}
+
+// 🔹 Cargar opciones de filtro de servicio
+function cargarFiltroServicios() {
+    const filtroSelect = document.getElementById('filtroServicio');
+    const tiposServicio = obtenerTiposServicio();
+    
+    // Limpiar opciones existentes (excepto la primera)
+    while (filtroSelect.options.length > 1) {
+        filtroSelect.remove(1);
+    }
+    
+    // Añadir opciones para cada tipo de servicio
+    tiposServicio.forEach(tipo => {
+        const option = document.createElement('option');
+        option.value = tipo;
+        option.textContent = tipo;
+        filtroSelect.appendChild(option);
+    });
+}
+
+// 🔹 Aplicar filtros
+function aplicarFiltros() {
+    const tipoServicio = document.getElementById('filtroServicio').value;
+    const ordenFecha = document.getElementById('ordenFecha').value;
+    
+    // Filtrar por tipo de servicio
+    if (tipoServicio === 'todos') {
+        reservasFiltradas = [...reservasData];
+    } else {
+        reservasFiltradas = reservasData.filter(reserva => 
+            reserva.tipo_servicio === tipoServicio
+        );
+    }
+    
+    // Ordenar por fecha
+    reservasFiltradas.sort((a, b) => {
+        const fechaA = new Date(a.fecha_reserva);
+        const fechaB = new Date(b.fecha_reserva);
+        
+        if (ordenFecha === 'recientes') {
+            return fechaB - fechaA; // Más recientes primero
+        } else {
+            return fechaA - fechaB; // Más antiguos primero
+        }
+    });
+    
+    // Reiniciar a la primera página después de filtrar
+    paginaActual = 1;
+    
+    // Volver a renderizar
+    cargarReservas();
+    actualizarPaginacion();
 }
 
 // 🔹 Renderizar tabla de reservas
@@ -415,6 +473,68 @@ function cargarReservas() {
     });
 }
 
+// 🔹 Actualizar controles de paginación
+function actualizarPaginacion() {
+    const paginacion = document.getElementById('paginacion');
+    paginacion.innerHTML = '';
+    
+    const totalPaginas = Math.ceil(reservasFiltradas.length / reservasPorPagina);
+    
+    if (totalPaginas <= 1) return;
+    
+    // Botón Anterior
+    const liAnterior = document.createElement('li');
+    liAnterior.classList.add('page-item', paginaActual === 1 ? 'disabled' : '');
+    liAnterior.innerHTML = `
+        <a class="page-link" href="#" aria-label="Anterior" ${paginaActual === 1 ? 'tabindex="-1"' : ''}>
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    `;
+    liAnterior.addEventListener('click', (e) => {
+        if (paginaActual > 1) {
+            e.preventDefault();
+            paginaActual--;
+            cargarReservas();
+            actualizarPaginacion();
+        }
+    });
+    paginacion.appendChild(liAnterior);
+    
+    // Números de página
+    for (let i = 1; i <= totalPaginas; i++) {
+        const li = document.createElement('li');
+        li.classList.add('page-item', i === paginaActual ? 'active' : '');
+        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        
+        li.addEventListener('click', (e) => {
+            e.preventDefault();
+            paginaActual = i;
+            cargarReservas();
+            actualizarPaginacion();
+        });
+        
+        paginacion.appendChild(li);
+    }
+    
+    // Botón Siguiente
+    const liSiguiente = document.createElement('li');
+    liSiguiente.classList.add('page-item', paginaActual === totalPaginas ? 'disabled' : '');
+    liSiguiente.innerHTML = `
+        <a class="page-link" href="#" aria-label="Siguiente" ${paginaActual === totalPaginas ? 'tabindex="-1"' : ''}>
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    `;
+    liSiguiente.addEventListener('click', (e) => {
+        if (paginaActual < totalPaginas) {
+            e.preventDefault();
+            paginaActual++;
+            cargarReservas();
+            actualizarPaginacion();
+        }
+    });
+    paginacion.appendChild(liSiguiente);
+}
+
 // 🔹 Función para obtener reservas del backend
 async function cargarReservasBD(idUsuario) {
     try {
@@ -428,7 +548,11 @@ async function cargarReservasBD(idUsuario) {
 
         reservasData = data.reservas;
         reservasFiltradas = [...reservasData];
+        
+        // Cargar filtros y renderizar
+        cargarFiltroServicios();
         cargarReservas();
+        actualizarPaginacion();
     } catch (error) {
         console.error("Error al cargar reservas:", error);
     }
@@ -459,6 +583,18 @@ async function cancelarReserva(idReserva) {
 
 // 🔹 Inicialización
 document.addEventListener('DOMContentLoaded', () => {
-    const idUsuario = 1; // reemplaza con el usuario en sesión real
+    // Obtener el ID del usuario desde sessionStorage y convertirlo a número
+    const idUsuario = parseInt(sessionStorage.getItem('userId'));
+    
+    if (!idUsuario) {
+        console.error('No hay usuario en sesión');
+        return;
+    }
+
+    // Configurar eventos para los filtros
+    document.getElementById('filtroServicio').addEventListener('change', aplicarFiltros);
+    document.getElementById('ordenFecha').addEventListener('change', aplicarFiltros);
+    
+    // Cargar datos
     cargarReservasBD(idUsuario);
 });
