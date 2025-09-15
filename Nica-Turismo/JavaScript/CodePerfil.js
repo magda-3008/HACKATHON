@@ -398,7 +398,7 @@ function cargarFiltroServicios() {
 // 🔹 Aplicar filtros
 function aplicarFiltros() {
     const tipoServicio = document.getElementById('filtroServicio').value;
-    const ordenFecha = document.getElementById('ordenFecha').value;
+    //const ordenFecha = document.getElementById('ordenFecha').value;
     
     // Filtrar por tipo de servicio
     if (tipoServicio === 'todos') {
@@ -408,18 +408,6 @@ function aplicarFiltros() {
             reserva.tipo_servicio === tipoServicio
         );
     }
-    
-    // Ordenar por fecha
-    reservasFiltradas.sort((a, b) => {
-        const fechaA = new Date(a.fecha_reserva);
-        const fechaB = new Date(b.fecha_reserva);
-        
-        if (ordenFecha === 'recientes') {
-            return fechaB - fechaA; // Más recientes primero
-        } else {
-            return fechaA - fechaB; // Más antiguos primero
-        }
-    });
     
     // Reiniciar a la primera página después de filtrar
     paginaActual = 1;
@@ -444,22 +432,23 @@ function cargarReservas() {
     }
 
     reservasPagina.forEach(reserva => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td>${reserva.tipo_servicio}</td>
-            <td>${formatearFecha(reserva.fecha_reserva)}</td>
-            <td>
-                <span class="badge ${reserva.estado === "Confirmada" ? "bg-success" : "bg-danger"}">
-                    ${reserva.estado}
-                </span>
-            </td>
-            <td>
-                <button class="btn btn-sm btn-outline-danger cancelar-btn" data-id="${reserva.id}" title="Cancelar reserva">
-                    <i class="fas fa-times"></i>
-                </button>
-            </td>
-        `;
-        tbody.appendChild(tr);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+        <td>${reserva.tipo_servicio}</td>
+        <td>${formatearFecha(reserva.fecha_inicio)}</td>
+        <td>${reserva.cant_cupos}</td> <!-- Nueva columna -->
+        <td>
+            <span class="badge ${reserva.estado === "Confirmada" ? "bg-success" : "bg-danger"}">
+                ${reserva.estado}
+            </span>
+        </td>
+        <td>
+            <button class="btn btn-sm btn-outline-danger cancelar-btn" data-id="${reserva.id}" title="Cancelar reserva">
+                <i class="fas fa-times"></i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(tr);
     });
 
     // 🔹 Agregar eventos a los botones "Cancelar"
@@ -477,56 +466,60 @@ function cargarReservas() {
 function actualizarPaginacion() {
     const paginacion = document.getElementById('paginacion');
     paginacion.innerHTML = '';
-    
+
     const totalPaginas = Math.ceil(reservasFiltradas.length / reservasPorPagina);
-    
-    if (totalPaginas <= 1) return;
-    
+
+    if (totalPaginas <= 1) return; // No mostrar paginación si hay 1 o 0 páginas
+
     // Botón Anterior
     const liAnterior = document.createElement('li');
-    liAnterior.classList.add('page-item', paginaActual === 1 ? 'disabled' : '');
+    liAnterior.classList.add('page-item');
+    if (paginaActual === 1) liAnterior.classList.add('disabled');
     liAnterior.innerHTML = `
-        <a class="page-link" href="#" aria-label="Anterior" ${paginaActual === 1 ? 'tabindex="-1"' : ''}>
+        <a class="page-link" href="#" aria-label="Anterior">
             <span aria-hidden="true">&laquo;</span>
         </a>
     `;
     liAnterior.addEventListener('click', (e) => {
+        e.preventDefault();
         if (paginaActual > 1) {
-            e.preventDefault();
             paginaActual--;
             cargarReservas();
             actualizarPaginacion();
         }
     });
     paginacion.appendChild(liAnterior);
-    
+
     // Números de página
     for (let i = 1; i <= totalPaginas; i++) {
         const li = document.createElement('li');
-        li.classList.add('page-item', i === paginaActual ? 'active' : '');
+        li.classList.add('page-item');
+        if (i === paginaActual) li.classList.add('active');
+
         li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
-        
         li.addEventListener('click', (e) => {
             e.preventDefault();
             paginaActual = i;
             cargarReservas();
             actualizarPaginacion();
         });
-        
+
         paginacion.appendChild(li);
     }
-    
+
     // Botón Siguiente
     const liSiguiente = document.createElement('li');
-    liSiguiente.classList.add('page-item', paginaActual === totalPaginas ? 'disabled' : '');
+    liSiguiente.classList.add('page-item');
+    if (paginaActual === totalPaginas) liSiguiente.classList.add('disabled');
+
     liSiguiente.innerHTML = `
-        <a class="page-link" href="#" aria-label="Siguiente" ${paginaActual === totalPaginas ? 'tabindex="-1"' : ''}>
+        <a class="page-link" href="#" aria-label="Siguiente">
             <span aria-hidden="true">&raquo;</span>
         </a>
     `;
     liSiguiente.addEventListener('click', (e) => {
+        e.preventDefault();
         if (paginaActual < totalPaginas) {
-            e.preventDefault();
             paginaActual++;
             cargarReservas();
             actualizarPaginacion();
@@ -534,6 +527,7 @@ function actualizarPaginacion() {
     });
     paginacion.appendChild(liSiguiente);
 }
+
 
 // 🔹 Función para obtener reservas del backend
 async function cargarReservasBD(idUsuario) {
@@ -593,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Configurar eventos para los filtros
     document.getElementById('filtroServicio').addEventListener('change', aplicarFiltros);
-    document.getElementById('ordenFecha').addEventListener('change', aplicarFiltros);
+    //document.getElementById('ordenFecha').addEventListener('change', aplicarFiltros);
     
     // Cargar datos
     cargarReservasBD(idUsuario);

@@ -67,13 +67,6 @@
               <!-- Las opciones se cargarán dinámicamente -->
             </select>
           </div>
-          <div class="col-md-6">
-            <label for="ordenFecha" class="form-label">Ordenar por fecha:</label>
-            <select id="ordenFecha" class="form-select">
-              <option value="recientes">Más recientes primero</option>
-              <option value="antiguos">Más antiguos primero</option>
-            </select>
-          </div>
         </div>
       </div>
 
@@ -83,13 +76,18 @@
         <tr>
             <th>Servicio</th>
             <th>Fecha de reserva</th>
+            <th>Cupos</th>
             <th>Estado</th>
         </tr>
     </thead>
     <tbody id="historialBody">
         <!-- Aquí se insertan las filas dinámicamente -->
     </tbody>
-</table>
+  </table>
+
+  <nav aria-label="Paginación historial">
+  <ul class="pagination" id="paginacion"></ul>
+</nav>
     </div>
   </div>
 </div>

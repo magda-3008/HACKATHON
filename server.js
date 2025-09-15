@@ -378,7 +378,7 @@ app.get('/obtenerreservas/:id', (req, res) => {
     const userId = req.params.id;
 
     const query = `
-        SELECT id, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, fecha_fin, estado
+        SELECT id, tipo_servicio, id_servicio, fecha_inicio, fecha_fin, estado, cant_cupos
         FROM historial_reservas
         WHERE id_usuario = ?
         ORDER BY fecha_reserva DESC
@@ -407,14 +407,22 @@ app.post("/confirmar-pago", async (req, res) => {
 
     try {
         for (let r of reservas) {
-            const { id: idTransporte, cantidad } = r;
+            const { id: idTransporte, cantidad, fecha_inicio } = r;
 
-            // Puedes agregar validación de disponibilidad si quieres
+            if (!fecha_inicio) {
+                return res.status(400).json({ success: false, mensaje: "Falta fecha de inicio en alguna reserva" });
+            }
+
+            // Convertimos la fecha a formato MySQL DATETIME
+            const fechaInicio = new Date(fecha_inicio + "T00:00:00"); 
+            // fecha_reserva = ahora
+            const fechaReserva = new Date();
+
             await conexion.query(`
                 INSERT INTO historial_reservas
                 (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
-                VALUES (?, 'Transporte', ?, NOW(), NOW(), 'Pendiente', ?)
-            `, [idUsuario, idTransporte, cantidad]);
+                VALUES (?, 'Transporte', ?, ?, ?, 'Pendiente', ?)
+            `, [idUsuario, idTransporte, fechaReserva, fechaInicio, cantidad]);
         }
 
         res.json({ success: true, mensaje: "Reservas guardadas correctamente" });

@@ -162,49 +162,24 @@ function limpiarCarrito() {
     mostrarCarrito();
 }
 
-// ----------------- Confirmar reserva -----------------
-//document.getElementById("confirmarReserva").addEventListener("click", async () => {
-  //  const cant_cupos = parseInt(document.getElementById("cantidadBoletos").value);
-  //  const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
-  //  const idTransporte = parseInt(document.getElementById("confirmarReserva").dataset.id);
-  //  const fechaInicio = document.getElementById("fechaReserva").value;
-  //  const userId = parseInt(sessionStorage.getItem("userId"));
-
-//     if (!userId) return alert("Inicia sesión o regístrate para poder reservar");
-//     if (!idTransporte) return alert("No se ha seleccionado un transporte");
-//     if (!fechaInicio) return alert("Selecciona una fecha de reserva");
-//     if (!cant_cupos || cant_cupos < 1) return alert("Cantidad inválida");
-
-//     try {
-//         const res = await fetch("/reservar-transporte", {
-//             method: "POST",
-//             headers: { "Content-Type": "application/json" },
-//             body: JSON.stringify({ userId, idTransporte, fechaInicio, cant_cupos })
-//         });
-
-//         const data = await res.json();
-//         if (!data.disponible) return alert(data.mensaje);
-
-//         agregarAlCarrito({ id: idTransporte, tipo: "transporte", nombre, cantidad: cant_cupos });
-
-//         const modalEl = document.getElementById('reservaModal');
-//         bootstrap.Modal.getInstance(modalEl).hide();
-
-//         alert("Reserva exitosa");
-//     } catch (error) {
-//         console.error(error);
-//         alert("Error al reservar transporte");
-//     }
-// });
-
+// --- Confirmar reserva en el modal ---
 document.getElementById("confirmarReserva").addEventListener("click", () => {
     const cant_cupos = parseInt(document.getElementById("cantidadBoletos").value);
     const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
     const idTransporte = parseInt(document.getElementById("confirmarReserva").dataset.id);
+    const fechaReserva = document.getElementById("fechaReserva").value; // YYYY-MM-DD
 
     if (!idTransporte) return alert("No se ha seleccionado un transporte");
+    if (!fechaReserva) return alert("Debes seleccionar una fecha");
 
-    agregarAlCarrito({ id: idTransporte, tipo: "transporte", nombre, cantidad: cant_cupos });
+    // Guardamos en el carrito, incluyendo la fecha seleccionada
+    agregarAlCarrito({ 
+        id: idTransporte, 
+        tipo: "transporte", 
+        nombre, 
+        cantidad: cant_cupos,
+        fecha_inicio: fechaReserva // clave importante
+    });
 
     const modalEl = document.getElementById('reservaModal');
     bootstrap.Modal.getInstance(modalEl).hide();
