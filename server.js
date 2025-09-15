@@ -324,6 +324,44 @@ app.get("/transportes", (req, res) => {
     });
 });
 
+// Ruta para obtener reservas de un usuario por ID
+app.get('/obtenerreservas/:id', (req, res) => {
+    const userId = req.params.id;
+
+    const query = `
+        SELECT id, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, fecha_fin, estado
+        FROM historial_reservas
+        WHERE id_usuario = ?
+        ORDER BY fecha_reserva DESC
+    `;
+
+    conexion.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+
+        if (result.length > 0) {
+            res.json({ success: true, reservas: result });
+        } else {
+            res.json({ success: false, message: "No se encontraron reservas" });
+        }
+    });
+});
+
+app.put('/cancelarreserva/:id', (req, res) => {
+    const { id } = req.params;
+    const query = "UPDATE historial_reservas SET estado = 'Cancelada' WHERE id = ?";
+    conexion.query(query, [id], (err, result) => {
+        if (err) {
+            console.error("Error en la consulta:", err);
+            return res.status(500).json({ success: false, message: "Error en servidor" });
+        }
+        res.json({ success: true });
+    });
+});
+
+
 // Ruta para servir el archivo HTML de visualización de datos de Pacientes
 //app.get('/datosusuario-page', (req, res) => {
   //  res.sendFile(path.join(__dirname, 'STASYSDEP/visualDatosPaciente.html'));
