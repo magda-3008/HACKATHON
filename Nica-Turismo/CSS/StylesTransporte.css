@@ -1,34 +1,67 @@
-:root {
-  --header-h: 80px;
-}
-
-* { box-sizing: border-box; }
-
 body {
   padding-top: var(--header-h);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url("../Resource/LagunaDePerlas.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
+  margin: 0;
+  color: #333;
 }
 
-header{
-    position: fixed;
-    top: 0;           /* ← anclado arriba */
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    background: #26a9cabe; 
+/* Contenedor principal */
+.contenedor {
+  max-width: 1300px;   /* ancho máximo */
+  margin: 0 auto;      /* centrar en la pantalla */
+  background: #fff;    /* fondo blanco */
+  border-radius: 12px; /* esquinas redondeadas */
+  padding: 20px;       /* espacio interno */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* sombra */
+  min-height: calc(100vh - var(--header-h)); /* ocupa casi toda la pantalla */
 }
 
-.header_nav{
-    height: var(--header-h);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    padding: 0 16px; 
+:root {
+            --primary: #558145;
+            --secondary: #264653;
+            --accent: #E9C46A;
+            --light: #F8F9FA;
+            --dark: #343A40;
+            --success: #28A745;
+            --danger: #DC3545;
+            --gray: #6C757D;
+            --header-h: 80px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+
+        
+       * { box-sizing: border-box; }
+
+header {
+  position: fixed;
+  top: 0;           
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: linear-gradient(to right, #36522C, #79B863);
 }
 
+.header_nav {
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 16px; 
+}
+
+.header_nav img {
+  height: calc(var(--header-h) - 0px);
+  width: auto;
+}
 
 .nav_list {
   display: flex;
-  justify-content: space-between;  /* reparte el espacio disponible */
+  justify-content: space-between;  
   width: 100%;
   list-style: none;
   margin: 0;
@@ -36,47 +69,103 @@ header{
 }
 
 .nav_list a {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
 }
 
 .nav_list a:hover {
-  color: #266371;
+  color: #E9C46A
 }
 
 .nav_list h4 {
-    font-size: 16px; /* tamaño más pequeño para el menú */
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
+  font-size: 16px;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;  
 }
 
-.transport-card {
-  border: 1px solid #dee2e6;
-  border-radius: 0.5rem;
-  padding: 1rem;
+.logo span{
+    color: white;
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 23px;
+}
+
+.logo {
+    display: flex;
+}
+
+.lista-transporte h2 {
+  font-weight: 600;
+  color: #1b5e20;
+}
+
+#transportContainer {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+#transportContainer .card {
+  width: 280px;
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: #fff;
-  cursor: pointer;
-  transition: 0.2s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 
-.transport-card:hover {
-  border-color: #0d6efd;
-  box-shadow: 0 0 10px rgba(13, 110, 253, 0.2);
-}
-
-.transport-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-.transport-img {
-  width: 100%;
-  height: 150px;
+#transportContainer .card img {
+  height: 180px;
   object-fit: cover;
-  border-radius: 0.3rem;
-  margin-bottom: 0.8rem;
-  background: pink;
 }
+
+#transportContainer .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+#transportContainer .card-body h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2e7d32;
+}
+
+#transportContainer .card-body p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* -------------------
+   Modal de reserva
+------------------- */
+.modal-content {
+  border-radius: 12px;
+}
+
+.modal-header {
+  background: #65afeb;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#confirmarReserva {
+  background: #65afeb;
+  border: 2px solid #65afeb;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+#confirmarReserva:hover {
+  background: white;
+  color: #65afeb;
+  border: 2px solid #65afeb;
+}
+
 
 .carrito-flotante {
   position: fixed;
@@ -92,4 +181,15 @@ header{
   justify-content: space-between;
   align-items: center;
   margin-bottom: 5px;
+}
+
+.btn-primary{
+  background-color: #65afeb;
+  border: none;
+}
+
+.btn-primary:hover {
+    background-color: white;
+    color: #65afeb;
+    border: #65afeb;
 }

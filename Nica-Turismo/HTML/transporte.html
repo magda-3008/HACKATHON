@@ -10,16 +10,18 @@
 </head>
 <body>
   <header>
-   <div class="header_nav">
+    <div class="header_nav">
+        <div class="logo">
+                <img src="../Resource/LogoNICATURISMO.png" alt="Logo">
+                <span>Nica Turismo</span>
+            </div>
 
-          <img src="../Resource/LogoNICATURISMO.png" alt="" width="100px" height="auto" >
-
-           <ul class="nav_list">
-            <li class="list"><a href=""><h4>Transporte</h4></a></li>
-            <li class="list"><a href=""><h4>Hoteles</h4></a></li>
-            <li class="list"><a href=""><h4>Lugares a visitar</h4></a></li>
-            <li class="list"><a href=""><h4>Rutas turísticas</h4></a></li>
-            <li class="list"><a href="perfilusuario.html"><h4>Mi perfil</h4></a></li>
+            <ul class="nav_list">
+                <li><a href="#">Lugares a visitar</a></li>
+                <li><a href="#">Rutas turísticas</a></li>
+                <li><a href="transporte.html">Transporte</a></li>
+                <li><a href="#">Hoteles</a></li>
+                <li><a href="perfilusuario.html">Mi perfil</a></li>
             </ul>
 
             <!-- Carrito flotante -->
@@ -28,10 +30,10 @@
               <div id="carritoItems"></div>
               <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">Vaciar Carrito</button>
             </div>
-
-        </div>
+    </div>
     </header>
 
+  <div class="contenedor">
   <main class="container my-4">
 
      <h1>Gestión de transporte</h1>
@@ -42,18 +44,18 @@
       <label for="rutaSelect" class="form-label fw-bold">Rutas Turísticas</label>
       <select class="form-select" id="rutaSelect">
        <option value="">-- Todas las rutas --</option>
-        <option value="rio-san-juan">Rutas de nuestro Río San Juan</option>
-        <option value="gran-lago-cocibolca">Nuestro Gran Lago Cocibolca</option>
-        <option value="segovianas">Rutas Segovianas</option>
-        <option value="matagalpinas">Rutas Matagalpinas</option>
-        <option value="jinoteganos">Paisajes Jinoteganos</option>
-        <option value="volcanes">Ruta de los Volcanes</option>
-        <option value="ciudades-patrimoniales">Rutas de Ciudades Patrimoniales</option>
-        <option value="pueblos-artesanos">Ruta de los Pueblos Artesanos</option>
-        <option value="playeras">Rutas Playeras</option>
-        <option value="caribenas">Rutas Caribeñas</option>
-        <option value="gastronomica">Ruta Gastronómica</option>
-        <option value="boaquena-chontalenas">Ruta Boaqueña y Chontaleñas</option>
+        <option value="1">Rutas de nuestro Río San Juan</option>
+        <option value="2">Nuestro Gran Lago Cocibolca</option>
+        <option value="3">Rutas Segovianas</option>
+        <option value="4">Rutas Matagalpinas</option>
+        <option value="5">Paisajes Jinoteganos</option>
+        <option value="6">Ruta de los Volcanes</option>
+        <option value="7">Rutas de Ciudades Patrimoniales</option>
+        <option value="8">Ruta de los Pueblos Artesanos</option>
+        <option value="9">Rutas Playeras</option>
+        <option value="10">Rutas Caribeñas</option>
+        <option value="11">Ruta Gastronómica</option>
+        <option value="12">Ruta Boaqueña y Chontaleñas</option>
       </select>
     </div>
 
@@ -84,6 +86,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Bootstrap JS -->
