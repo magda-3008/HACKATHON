@@ -112,35 +112,57 @@
           </div>
           <div class="mb-3">
             <label for="editarCorreo" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" id="editarCorreo">
+            <input type="email" class="form-control" id="editarCorreo" disabled>
           </div>
-          <!-- Acordeón cambio de contraseña -->
-          <div class="accordion" id="accordionCambioPassword">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapsePassword">
-                  <i class="bi bi-key me-2"></i> Cambiar contraseña
-                </button>
-              </h2>
-              <div id="collapsePassword" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                  <div class="mb-3">
-                    <label for="contrasenaActual" class="form-label">Contraseña actual</label>
+         <!-- Acordeón cambio de contraseña -->
+        <div class="accordion" id="accordionCambioPassword">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#collapsePassword">
+                <i class="bi bi-key me-2"></i> Cambiar contraseña
+              </button>
+            </h2>
+            <div id="collapsePassword" class="accordion-collapse collapse">
+              <div class="accordion-body">
+
+                <!-- Contraseña actual -->
+                <div class="mb-3">
+                  <label for="contrasenaActual" class="form-label">Contraseña actual</label>
+                  <div class="input-group">
                     <input type="password" class="form-control" id="contrasenaActual">
-                  </div>
-                  <div class="mb-3">
-                    <label for="nuevaContrasena" class="form-label">Nueva contraseña</label>
-                    <input type="password" class="form-control" id="nuevaContrasena">
-                  </div>
-                  <div class="mb-3">
-                    <label for="confirmarContrasena" class="form-label">Confirmar nueva contraseña</label>
-                    <input type="password" class="form-control" id="confirmarContrasena">
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#contrasenaActual" aria-label="Mostrar contraseña">
+                      <i class="bi bi-eye-slash"></i>
+                    </button>
                   </div>
                 </div>
+
+                <!-- Nueva contraseña -->
+                <div class="mb-3">
+                  <label for="nuevaContrasena" class="form-label">Nueva contraseña</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="nuevaContrasena">
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#nuevaContrasena" aria-label="Mostrar contraseña">
+                      <i class="bi bi-eye-slash"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Confirmar nueva contraseña -->
+                <div class="mb-3">
+                  <label for="confirmarContrasena" class="form-label">Confirmar nueva contraseña</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" id="confirmarContrasena">
+                    <button class="btn btn-outline-secondary toggle-password" type="button" data-target="#confirmarContrasena" aria-label="Mostrar contraseña">
+                      <i class="bi bi-eye-slash"></i>
+                    </button>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
+        </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

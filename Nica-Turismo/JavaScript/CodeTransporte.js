@@ -1,3 +1,18 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const perfilItem = document.getElementById("perfilItem");
+
+    // Revisar si hay sesión iniciada
+    const userId = sessionStorage.getItem("userId");
+
+    if (userId) {
+        // Usuario logueado → mostrar perfil
+        perfilItem.innerHTML = `<a href="perfilusuario.html">Mi perfil</a>`;
+    } else {
+        // Usuario NO logueado → mostrar registrarse
+        perfilItem.innerHTML = `<a href="signup.html">Regístrate</a>`;
+    }
+});
+
 // --- refs DOM ---
 const transportContainer = document.getElementById("transportContainer");
 const rutaSelect = document.getElementById("rutaSelect");
@@ -66,7 +81,11 @@ function renderTransportes(filtroRuta = "") {
                     <p class="card-text">Tipo: ${transporte.tipo}</p>
                     <p class="card-text">Frecuencia: ${transporte.frecuencia}</p>
                     <p class="card-text">Precio: C$ ${transporte.precio}</p>
-                    <button class="btn btn-primary reservar-btn" data-id="${transporte.id}" data-nombre="${transporte.nombre}">Reservar</button>
+                    ${transporte.frecuencia.toLowerCase() === "bajo reserva"
+                    ? `<button class="btn btn-primary reservar-btn" data-id="${transporte.id}" data-nombre="${transporte.nombre}">Reservar</button>`
+                    : `<span class="text-muted">No disponible para reserva</span>`
+                }
+
                 </div>
             `;
 

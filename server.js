@@ -398,6 +398,16 @@ app.get('/obtenerreservas/:id', (req, res) => {
     });
 });
 
+// Función helper para usar query de mysql con promesas
+function query(sql, params) {
+    return new Promise((resolve, reject) => {
+        conexion.query(sql, params, (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+}
+
 app.post("/confirmar-pago", async (req, res) => {
     const { idUsuario, reservas } = req.body;
 
@@ -413,12 +423,29 @@ app.post("/confirmar-pago", async (req, res) => {
                 return res.status(400).json({ success: false, mensaje: "Falta fecha de inicio en alguna reserva" });
             }
 
-            // Convertimos la fecha a formato MySQL DATETIME
-            const fechaInicio = new Date(fecha_inicio + "T00:00:00"); 
-            // fecha_reserva = ahora
+            // Fecha que seleccionó el usuario
+            const fechaInicio = new Date(fecha_inicio + "T00:00:00");
+
+            // Fecha en la que el usuario hace la reserva
             const fechaReserva = new Date();
 
-            await conexion.query(`
+            // 🔍 Validar si ya existe una reserva para este transporte en esa fecha
+            const rows = await query(`
+                SELECT COUNT(*) AS total
+                FROM historial_reservas
+                WHERE id_servicio = ? AND tipo_servicio = 'Transporte' 
+                AND DATE(fecha_inicio) = DATE(?)
+            `, [idTransporte, fechaInicio]);
+
+            if (rows[0].total > 0) {
+                return res.status(400).json({ 
+                    success: false, 
+                    mensaje: `El transporte ya está reservado en la fecha ${fecha_inicio}` 
+                });
+            }
+
+            // ✅ Insertar la nueva reserva
+            await query(`
                 INSERT INTO historial_reservas
                 (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
                 VALUES (?, 'Transporte', ?, ?, ?, 'Pendiente', ?)

@@ -283,36 +283,54 @@ async function cambiarContrasena(e) {
 
 // Función para toggle de visibilidad de contraseña
 function setupPasswordToggles() {
-    // Seleccionar todos los botones de toggle
-    const toggleButtons = document.querySelectorAll('.toggle-password');
-    
-    toggleButtons.forEach(button => {
-        // Asegurarnos de que no hay event listeners duplicados
-        button.replaceWith(button.cloneNode(true));
+  // Evitar listeners duplicados (clonando)
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    const clone = btn.cloneNode(true);
+    btn.parentNode.replaceChild(clone, btn);
+  });
+
+  // Añadir listeners
+  document.querySelectorAll('.toggle-password').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Primero, intentar localizar input vía data-target
+      const target = btn.dataset.target;
+      let input = target ? document.querySelector(target) : null;
+
+      // Si no encontró, intentar buscar en input-group o elemento anterior
+      if (!input) {
+        input = btn.closest('.input-group')?.querySelector('input[type="password"], input[type="text"]') || 
+                (btn.previousElementSibling && btn.previousElementSibling.tagName === 'INPUT' ? btn.previousElementSibling : null);
+      }
+
+      if (!input) {
+        console.warn('toggle-password: no se encontró input asociado para', btn);
+        return;
+      }
+
+      const icon = btn.querySelector('i');
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      } else {
+        input.type = 'password';
+        if (icon) {
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        }
+      }
+
+      // Mantener el foco sin hacer scroll brusco
+      try { input.focus({ preventScroll: true }); } catch (e) { input.focus(); }
     });
-    
-    // Volver a seleccionar después del clonado
-    document.querySelectorAll('.toggle-password').forEach(button => {
-        button.addEventListener('click', function() {
-            // Encontrar el input asociado (debe ser el elemento hermano anterior)
-            const input = this.closest('.input-group').querySelector('input');
-            const icon = this.querySelector('i');
-            
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            }
-            
-            // Mantener el foco en el input
-            input.focus();
-        });
-    });
+  });
 }
+
+// Asegúrate de ejecutar la función cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', setupPasswordToggles);
 
 // Configurar los toggles cuando el modal se abra
 document.addEventListener('DOMContentLoaded', function() {
@@ -344,7 +362,6 @@ function cerrarSesion() {
 
 // Configurar el evento para el botón de cerrar sesión
 document.addEventListener('DOMContentLoaded', function() {
-    // ... otro código que ya tienes ...
     
     // Configurar el botón de cerrar sesión
     const btnCerrarSesion = document.getElementById('btnCerrarSesion');
