@@ -74,15 +74,15 @@ header {
         
        * { box-sizing: border-box; }
 
-       body {
-        padding-top: 55px;
-        background-image: url(../Resource/Corn-Island-Nicaragua-feature.jpeg); 
-        background-color: rgba(0, 0, 0, 0.4);
-        background-blend-mode: darken;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: fixed;
-    }
+      body {
+    padding-top: 55px;
+    background-image: url(../Resource/Corn-Island-Nicaragua-feature.jpeg); 
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: fixed;
+}
         
         .container {
             max-width: 1200px;

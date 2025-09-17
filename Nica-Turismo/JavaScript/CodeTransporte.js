@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
     const perfilItem = document.getElementById("perfilItem");
 
@@ -49,7 +50,9 @@ function renderTransportes(filtroRuta = "") {
         ? (TRANSPORTES_DATA[filtroRuta] ? [filtroRuta] : [])
         : Object.keys(TRANSPORTES_DATA);
 
+
     if (!keys.length) {
+
         transportContainer.innerHTML = `<div class="alert alert-warning">No hay transportes para esta ruta.</div>`;
         return;
     }
@@ -144,6 +147,7 @@ function mostrarCarrito() {
     if (!contenedor) return;
 
     contenedor.innerHTML = "";
+
     if (!carrito.length) {
         contenedor.innerHTML = "<p>Tu carrito está vacío</p>";
         return;
@@ -165,6 +169,7 @@ function agregarAlCarrito(reserva) {
     const index = carrito.findIndex(item => item.id === reserva.id && item.tipo === reserva.tipo);
     if (index !== -1) carrito[index].cantidad += reserva.cantidad;
     else carrito.push(reserva);
+
     guardarCarrito(carrito);
     mostrarCarrito();
 }
@@ -236,4 +241,3 @@ document.getElementById("limpiarCarrito")?.addEventListener("click", limpiarCarr
 
 // ----------------- Inicializar carrito al cargar página -----------------
 document.addEventListener("DOMContentLoaded", mostrarCarrito);
-

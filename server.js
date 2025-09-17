@@ -471,7 +471,6 @@ app.put('/cancelarreserva/:id', (req, res) => {
     });
 });
 
-
 // Ruta para servir el archivo HTML de visualización de datos de Pacientes
 //app.get('/datosusuario-page', (req, res) => {
   //  res.sendFile(path.join(__dirname, 'STASYSDEP/visualDatosPaciente.html'));
@@ -479,6 +478,7 @@ app.put('/cancelarreserva/:id', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'Nica-Turismo')));
 app.use(express.static(path.join(__dirname, 'public'))); // sirve transporte.html
+
 
 app.use('/uploads/transporte', express.static(path.join(__dirname, '/uploads/transporte')));
 
