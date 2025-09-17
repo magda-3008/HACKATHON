@@ -21,13 +21,14 @@
                 <li><a href="#">Rutas turísticas</a></li>
                 <li><a href="transporte.html">Transporte</a></li>
                 <li><a href="#">Hoteles</a></li>
-                <li><a href="perfilusuario.html">Mi perfil</a></li>
-            </ul>
+                <li id="perfilItem"><a href="perfilusuario.html">Mi perfil</a></li>
+            </ul>  
 
             <!-- Carrito flotante -->
             <div id="carritoContainer" class="carrito-flotante p-3 bg-light border shadow">
               <h5>Mi Carrito</h5>
               <div id="carritoItems"></div>
+              <button id="confirmarPago" class="btn btn-success mt-2">Confirmar Pago</button>
               <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">Vaciar Carrito</button>
             </div>
     </div>
@@ -79,6 +80,10 @@
           <p id="transporteSeleccionadoTexto"></p>
           <label for="cantidadBoletos" class="form-label">Cantidad de boletos:</label>
           <input type="number" id="cantidadBoletos" class="form-control" min="1" value="1">
+          <div class="mb-3">
+            <label for="fechaReserva" class="form-label">Fecha de reserva</label>
+            <input type="date" id="fechaReserva" class="form-control">
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
