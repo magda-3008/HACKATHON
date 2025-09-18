@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const session = require('express-session');
 
 const app = express();
 
@@ -12,6 +13,15 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' })); // Aumenta el l�
 app.use(express.json()); // Para manejar datos JSON
 app.use(express.urlencoded({ extended: true })); // Para manejar datos codificados en formularios
 
+app.use(session({
+  secret: "N1(4TU5",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,  // más seguro, no accesible desde JS
+    maxAge: 1000 * 60 * 60 // 1 hora (opcional)
+  }
+}));
 
 // Configuración de la conexión a la base de datos
 const conexion = mysql.createConnection({
@@ -120,7 +130,7 @@ function ejecutarConsulta(tabla, callback) {
     });
 }
 
-// Ruta para obtener los datos de usuarios y enviarlos como respuesta JSON
+// ---------------- Login con sesión ----------------
 app.post('/datosusuario', (req, res) => {
     const { usuario, contraseña } = req.body;
 
@@ -133,10 +143,22 @@ app.post('/datosusuario', (req, res) => {
 
         if (result.length > 0) {
             // Usuario válido
-            res.json({ success: true, message: "Login exitoso" });
+            const user = result[0];
+
+            // ⚡ Guardar el ID del usuario en la sesión
+            req.session.userId = user.id;
+
+            res.json({ 
+                success: true, 
+                message: "Login exitoso", 
+                nombre: user.nombre_usuario 
+            });
         } else {
             // Usuario incorrecto
-            res.json({ success: false, message: "Usuario o contraseña incorrectos" });
+            res.status(401).json({ 
+                success: false, 
+                message: "Usuario o contraseña incorrectos" 
+            });
         }
     });
 });
@@ -324,55 +346,6 @@ app.get("/transportes", (req, res) => {
     });
 });
 
-//Reserva de transporte
-// POST /reservar-transporte
-// app.post("/reservar-transporte", (req, res) => {
-//     const { userId, idTransporte, fechaInicio, cant_cupos } = req.body;
-
-//     // Validación básica
-//     if (!userId || !idTransporte || !fechaInicio || !cant_cupos) {
-//         return res.status(400).json({ error: "Datos incompletos" });
-//     }
-
-//     // 1️⃣ Verificar si el transporte ya está reservado para esa fecha
-//     const sqlCheck = `
-//         SELECT COUNT(*) AS total
-//         FROM historial_reservas
-//         WHERE tipo_servicio = 'Transporte'
-//           AND id_servicio = ?
-//           AND fecha_inicio = ?
-//           AND estado != 'Cancelada'
-//     `;
-
-//     conexion.query(sqlCheck, [idTransporte, fechaInicio], (err, results) => {
-//         if (err) {
-//             console.error("Error al consultar disponibilidad:", err);
-//             return res.status(500).json({ error: "Error al consultar disponibilidad" });
-//         }
-
-//         if (results[0].total > 0) {
-//             return res.status(400).json({ disponible: false, mensaje: "Transporte no disponible para esa fecha" });
-//         }
-
-//         // 2️⃣ Insertar reserva en historial_reservas
-//         const sqlInsert = `
-//             INSERT INTO historial_reservas 
-//             (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
-//             VALUES (?, 'Transporte', ?, NOW(), ?, 'Pendiente', ?)
-//         `;
-
-//         conexion.query(sqlInsert, [userId, idTransporte, fechaInicio, cant_cupos], (err2, result2) => {
-//             if (err2) {
-//                 console.error("Error al insertar reserva:", err2);
-//                 return res.status(500).json({ error: "Error al guardar la reserva" });
-//             }
-
-//             // ✅ Respuesta exitosa
-//             res.json({ disponible: true, mensaje: "Reserva confirmada" });
-//         });
-//     });
-// });
-
 // Ruta para obtener reservas de un usuario por ID
 app.get('/obtenerreservas/:id', (req, res) => {
     const userId = req.params.id;
@@ -408,55 +381,119 @@ function query(sql, params) {
     });
 }
 
-app.post("/confirmar-pago", async (req, res) => {
-    const { idUsuario, reservas } = req.body;
+// Obtener hoteles con su ruta
+app.get("/hoteles", (req, res) => {
+    const query = `
+        SELECT h.id_hotel, h.nombre, h.ubicacion, h.precio_por_noche, h.estrellas,
+               h.imagen_url AS img, h.descripcion,
+               h.id_ruta, r.nombre AS ruta_nombre
+        FROM hotel h
+        INNER JOIN ruta_turistica r ON h.id_ruta = r.id_ruta
+    `;
 
-    if (!idUsuario || !reservas || !Array.isArray(reservas) || reservas.length === 0) {
-        return res.status(400).json({ success: false, mensaje: "Datos incompletos" });
-    }
-
-    try {
-        for (let r of reservas) {
-            const { id: idTransporte, cantidad, fecha_inicio } = r;
-
-            if (!fecha_inicio) {
-                return res.status(400).json({ success: false, mensaje: "Falta fecha de inicio en alguna reserva" });
-            }
-
-            // Fecha que seleccionó el usuario
-            const fechaInicio = new Date(fecha_inicio + "T00:00:00");
-
-            // Fecha en la que el usuario hace la reserva
-            const fechaReserva = new Date();
-
-            // 🔍 Validar si ya existe una reserva para este transporte en esa fecha
-            const rows = await query(`
-                SELECT COUNT(*) AS total
-                FROM historial_reservas
-                WHERE id_servicio = ? AND tipo_servicio = 'Transporte' 
-                AND DATE(fecha_inicio) = DATE(?)
-            `, [idTransporte, fechaInicio]);
-
-            if (rows[0].total > 0) {
-                return res.status(400).json({ 
-                    success: false, 
-                    mensaje: `El transporte ya está reservado en la fecha ${fecha_inicio}` 
-                });
-            }
-
-            // ✅ Insertar la nueva reserva
-            await query(`
-                INSERT INTO historial_reservas
-                (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos)
-                VALUES (?, 'Transporte', ?, ?, ?, 'Pendiente', ?)
-            `, [idUsuario, idTransporte, fechaReserva, fechaInicio, cantidad]);
+    conexion.query(query, (err, rows) => {
+        if (err) {
+            console.error("Error al obtener hoteles:", err);
+            return res.status(500).json({ error: "Error al obtener hoteles" });
         }
 
-        res.json({ success: true, mensaje: "Reservas guardadas correctamente" });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, mensaje: "Error al guardar reservas" });
+        const hotelesPorRuta = {};
+        const rutas = {};
+
+        rows.forEach(row => {
+            const rutaId = row.id_ruta;
+
+            if (!hotelesPorRuta[rutaId]) hotelesPorRuta[rutaId] = [];
+            hotelesPorRuta[rutaId].push({
+                id_hotel: row.id_hotel,
+                nombre: row.nombre,
+                ubicacion: row.ubicacion,
+                precio: row.precio_por_noche,
+                estrellas: row.estrellas,
+                img: row.img,
+                descripcion: row.descripcion,
+            });
+
+            rutas[rutaId] = row.ruta_nombre;
+        });
+
+        res.json({ hoteles: hotelesPorRuta, rutas });
+    });
+});
+
+// Función para usar conexion.query con Promesas
+function queryAsync(sql, params) {
+  return new Promise((resolve, reject) => {
+    conexion.query(sql, params, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+}
+
+app.post("/confirmar-pago", async (req, res) => {
+  try {
+    // 🚨 Validar sesión
+    const userId = req.session.userId;
+    if (!userId) {
+      return res.status(401).json({ success: false, mensaje: "Debes iniciar sesión antes de realizar una reserva o pago." });
     }
+
+    const { reservas } = req.body;
+
+    if (!reservas || !reservas.length) {
+      return res.status(400).json({ success: false, mensaje: "No hay reservas para procesar" });
+    }
+
+    // Procesar cada reserva
+    for (const item of reservas) {
+      let id_servicio;
+      let total_pagado = 0;
+      let tipo_servicio;
+      let cantidad = item.cantidad || 1;
+      let fecha_inicio = item.fecha_inicio || null;
+
+      const tipoLower = (item.tipo || "").toLowerCase();
+
+      if (tipoLower === "hotel") {
+        // CORRECCIÓN: Usar item.id_hotel en lugar de item.id
+        const hotelRows = await queryAsync(
+          "SELECT id_hotel, precio_por_noche FROM hotel WHERE id_hotel = ?",
+          [item.id_hotel]  // ← CAMBIADO: item.id → item.id_hotel
+        );
+        if (!hotelRows.length) continue;
+        id_servicio = hotelRows[0].id_hotel;
+        total_pagado = hotelRows[0].precio_por_noche * cantidad;
+        tipo_servicio = "Hotel";
+        
+      } else if (tipoLower === "transporte") {
+        const transRows = await queryAsync(
+          "SELECT id, precio FROM transporte WHERE id = ?",
+          [item.id]
+        );
+        if (!transRows.length) continue;
+        id_servicio = transRows[0].id;
+        total_pagado = transRows[0].precio * cantidad;
+        tipo_servicio = "Transporte";
+      } else {
+        continue;
+      }
+
+      // Insertar en historial_reservas
+      await queryAsync(
+        `INSERT INTO historial_reservas
+         (id_usuario, tipo_servicio, id_servicio, fecha_reserva, fecha_inicio, estado, cant_cupos, total_pagado)
+         VALUES (?, ?, ?, ?, ?, 'Pendiente', ?, ?)`,
+        [userId, tipo_servicio, id_servicio, new Date(), fecha_inicio, cantidad, total_pagado]
+      );
+    }
+
+    res.json({ success: true, mensaje: "Pago confirmado y reservas guardadas" });
+
+  } catch (err) {
+    console.error("❌ Error al guardar reservas:", err);
+    res.status(500).json({ success: false, mensaje: "Error al guardar reservas" });
+  }
 });
 
 app.put('/cancelarreserva/:id', (req, res) => {

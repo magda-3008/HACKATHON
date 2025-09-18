@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Transporte</title>
+  <title>Nica Turismo</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../CSS/StylesTransporte.css">
+   <link rel="shortcut icon" href="../Resource/LogoPNG.png" />
 </head>
 <body>
   <header>
     <div class="header_nav">
         <div class="logo">
-                <img src="../Resource/LogoNICATURISMO.png" alt="Logo">
+                <img src="../Resource/LogoNICATURISMO.png" alt="Logo" id="logo" >
                 <span>Nica Turismo</span>
             </div>
 
@@ -20,19 +21,39 @@
                 <li><a href="#">Lugares a visitar</a></li>
                 <li><a href="#">Rutas turísticas</a></li>
                 <li><a href="transporte.html">Transporte</a></li>
-                <li><a href="#">Hoteles</a></li>
+                <li><a href="hoteles.html">Hoteles</a></li>
                 <li id="perfilItem"><a href="perfilusuario.html">Mi perfil</a></li>
             </ul>  
-
-            <!-- Carrito flotante -->
-            <div id="carritoContainer" class="carrito-flotante p-3 bg-light border shadow">
-              <h5>Mi Carrito</h5>
-              <div id="carritoItems"></div>
-              <button id="confirmarPago" class="btn btn-success mt-2">Confirmar Pago</button>
-              <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">Vaciar Carrito</button>
-            </div>
     </div>
     </header>
+
+    <!-- Carrito flotante -->
+<div id="carritoContainer" class="carrito-flotante p-3 bg-light border shadow">
+  <h5>Mi Carrito</h5>
+  <div id="carritoItems"></div>
+  <button id="confirmarPago" class="btn btn-success mt-2">Confirmar Pago</button>
+  <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">Vaciar Carrito</button>
+</div>
+
+<!-- 🔥 Modal Resumen Pago (moverlo fuera del header y del carrito) -->
+<div class="modal fade" id="resumenPagoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Resumen de tu pago</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul id="resumenReservas"></ul>
+        <h4>Total: <span id="totalPagar"></span></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" id="confirmarPagoFinal" class="btn btn-primary">Confirmar y pagar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   <div class="contenedor">
   <main class="container my-4">
@@ -87,7 +108,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="confirmarReserva">Confirmar Reserva</button>
+          <button type="button" class="btn btn-primary" id="confirmarReserva" data-id="" data-precio="" >Confirmar Reserva</button>
         </div>
       </div>
     </div>
@@ -97,5 +118,6 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../JavaScript/CodeTransporte.js"></script>
+  <script src="../JavaScript/Carrito.js"></script>
 </body>
 </html>

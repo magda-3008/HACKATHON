@@ -94,6 +94,7 @@ header {
 
 .logo {
     display: flex;
+    cursor: pointer;
 }
 
 .lista-transporte h2 {

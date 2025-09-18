@@ -78,6 +78,7 @@ body{
     width: 100px;
     height: auto;
     padding-bottom: 620px;
+    cursor: pointer;
 }
 
 .menu label {

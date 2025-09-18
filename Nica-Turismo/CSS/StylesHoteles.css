@@ -1,0 +1,201 @@
+body {
+  padding-top: var(--header-h);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url("../Resource/LagunaDePerlas.jpg") no-repeat center center fixed;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: darken;
+  margin: 0;
+  color: #333;
+}
+
+/* Contenedor principal */
+.contenedor {
+  max-width: 1300px;   /* ancho máximo */
+  margin: 0 auto;      /* centrar en la pantalla */
+  background: #fff;    /* fondo blanco */
+  border-radius: 12px; /* esquinas redondeadas */
+  padding: 20px;       /* espacio interno */
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* sombra */
+  min-height: calc(100vh - var(--header-h)); /* ocupa casi toda la pantalla */
+}
+
+:root {
+  --primary: #558145;
+  --secondary: #264653;
+  --accent: #E9C46A;
+  --light: #F8F9FA;
+  --dark: #343A40;
+  --success: #28A745;
+  --danger: #DC3545;
+  --gray: #6C757D;
+  --header-h: 80px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+header {
+  position: fixed;
+  top: 0;           
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: linear-gradient(to right, #36522C, #79B863);
+}
+
+.header_nav {
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 16px; 
+}
+
+.header_nav img {
+  height: calc(var(--header-h) - 0px);
+  width: auto;
+}
+
+.nav_list {
+  display: flex;
+  justify-content: space-between;  
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0 40px;
+}
+
+.nav_list a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.nav_list a:hover {
+  color: #E9C46A;
+}
+
+.logo span {
+  color: white;
+  font-weight: bold;
+  font-size: 25px;
+  margin-top: 4px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* -------------------
+   Lista de Hoteles
+------------------- */
+.lista-hotel h2 {
+  font-weight: 600;
+  color: #1b5e20;
+  margin-bottom: 1rem;
+}
+
+#HotelContainer {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+#HotelContainer .card {
+  width: 22rem;
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  cursor: pointer;
+}
+
+#HotelContainer .card img {
+  height: 220px;
+  object-fit: cover;
+}
+
+#HotelContainer .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+}
+
+#HotelContainer .card-body h5 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2e7d32;
+}
+
+#HotelContainer .card-body p {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+#HotelContainer .card-body .btn {
+  margin-top: 5px;
+}
+
+/* -------------------
+   Modal de reserva
+------------------- */
+.modal-content {
+  border-radius: 12px;
+}
+
+.modal-header {
+  background: #65afeb;
+  color: #fff;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+#confirmarReserva {
+  background: #65afeb;
+  border: 2px solid #65afeb;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+#confirmarReserva:hover {
+  background: white;
+  color: #65afeb;
+  border: 2px solid #65afeb;
+}
+
+/* -------------------
+   Carrito flotante
+------------------- */
+.carrito-flotante {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 250px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.btn-primary {
+  background-color: #65afeb;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: white;
+  color: #65afeb;
+  border: 2px solid #65afeb;
+}

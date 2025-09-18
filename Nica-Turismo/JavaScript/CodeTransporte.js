@@ -1,3 +1,6 @@
+document.getElementById('logo').addEventListener('click', () => {
+    window.location.href = 'home2.html';
+});
 
 document.addEventListener("DOMContentLoaded", () => {
     const perfilItem = document.getElementById("perfilItem");
@@ -81,12 +84,14 @@ function renderTransportes(filtroRuta = "") {
                 ${imgContent}
                 <div class="card-body">
                     <h5 class="card-title">${transporte.nombre}</h5>
-                    <p class="card-text">Tipo: ${transporte.tipo}</p>
-                    <p class="card-text">Frecuencia: ${transporte.frecuencia}</p>
-                    <p class="card-text">Precio: C$ ${transporte.precio}</p>
+                    <p class="card-text"><strong>Tipo:</strong> ${transporte.tipo}</p>
+                    <p class="card-text"><strong>Frecuencia:</strong> ${transporte.frecuencia}</p>
+                    <p class="card-text"><strong>Precio:</strong> C$ ${transporte.precio}</p>
                     ${transporte.frecuencia.toLowerCase() === "bajo reserva"
-                    ? `<button class="btn btn-primary reservar-btn" data-id="${transporte.id}" data-nombre="${transporte.nombre}">Reservar</button>`
-                    : `<span class="text-muted">No disponible para reserva</span>`
+                    ? `<button class="btn btn-primary reservar-btn" data-id="${transporte.id}" 
+                    data-nombre="${transporte.nombre}"
+                    data-precio="${transporte.precio}">Reservar</button>`
+                    : `<span class="text-muted"><strong>No disponible para reserva</strong></span>`
                 }
 
                 </div>
@@ -118,8 +123,21 @@ transportContainer.addEventListener("click", (e) => {
         const id = e.target.dataset.id;
         const nombre = e.target.dataset.nombre;
 
-        document.getElementById("transporteSeleccionadoTexto").textContent = nombre;
-        document.getElementById("confirmarReserva").dataset.id = id;
+        // Buscamos el transporte completo en TRANSPORTES_DATA
+        let transporteSeleccionado = null;
+        for (let ruta in TRANSPORTES_DATA) {
+            transporteSeleccionado = TRANSPORTES_DATA[ruta].find(t => t.id == id);
+            if (transporteSeleccionado) break;
+        }
+
+        if (!transporteSeleccionado) return alert("No se encontró el transporte seleccionado");
+
+        // Actualizamos el modal
+        document.getElementById("transporteSeleccionadoTexto").textContent = transporteSeleccionado.nombre;
+
+        const reservarBtn = document.getElementById("confirmarReserva");
+        reservarBtn.dataset.id = transporteSeleccionado.id;
+        reservarBtn.dataset.precio = transporteSeleccionado.precio; // 🔥 Aquí asignamos el precio real
 
         const modal = new bootstrap.Modal(document.getElementById("reservaModal"));
         modal.show();
@@ -133,37 +151,6 @@ rutaSelect.addEventListener("change", (e) => {
 });
 
 // ----------------- Carrito en localStorage -----------------
-function obtenerCarrito() {
-    return JSON.parse(localStorage.getItem("carritoReservas")) || [];
-}
-
-function guardarCarrito(carrito) {
-    localStorage.setItem("carritoReservas", JSON.stringify(carrito));
-}
-
-function mostrarCarrito() {
-    const carrito = obtenerCarrito();
-    const contenedor = document.getElementById("carritoItems");
-    if (!contenedor) return;
-
-    contenedor.innerHTML = "";
-
-    if (!carrito.length) {
-        contenedor.innerHTML = "<p>Tu carrito está vacío</p>";
-        return;
-    }
-
-    carrito.forEach(item => {
-        const div = document.createElement("div");
-        div.classList.add("carrito-item");
-        div.innerHTML = `
-            <span>${item.nombre} x ${item.cantidad} (${item.tipo})</span>
-            <button class="btn btn-sm btn-danger" onclick="eliminarReserva('${item.id}', '${item.tipo}')">&times;</button>
-        `;
-        contenedor.appendChild(div);
-    });
-}
-
 function agregarAlCarrito(reserva) {
     let carrito = obtenerCarrito();
     const index = carrito.findIndex(item => item.id === reserva.id && item.tipo === reserva.tipo);
@@ -174,24 +161,13 @@ function agregarAlCarrito(reserva) {
     mostrarCarrito();
 }
 
-function eliminarReserva(id, tipo) {
-    let carrito = obtenerCarrito();
-    carrito = carrito.filter(item => !(item.id === id && item.tipo === tipo));
-    guardarCarrito(carrito);
-    mostrarCarrito();
-}
-
-function limpiarCarrito() {
-    localStorage.removeItem("carritoReservas");
-    mostrarCarrito();
-}
-
 // --- Confirmar reserva en el modal ---
 document.getElementById("confirmarReserva").addEventListener("click", () => {
     const cant_cupos = parseInt(document.getElementById("cantidadBoletos").value);
     const nombre = document.getElementById("transporteSeleccionadoTexto").textContent;
     const idTransporte = parseInt(document.getElementById("confirmarReserva").dataset.id);
     const fechaReserva = document.getElementById("fechaReserva").value; // YYYY-MM-DD
+    const precio = parseFloat(document.getElementById("confirmarReserva").dataset.precio);
 
     if (!idTransporte) return alert("No se ha seleccionado un transporte");
     if (!fechaReserva) return alert("Debes seleccionar una fecha");
@@ -202,7 +178,8 @@ document.getElementById("confirmarReserva").addEventListener("click", () => {
         tipo: "transporte", 
         nombre, 
         cantidad: cant_cupos,
-        fecha_inicio: fechaReserva // clave importante
+        fecha_inicio: fechaReserva, // clave importante
+        precio: precio
     });
 
     const modalEl = document.getElementById('reservaModal');
@@ -210,34 +187,3 @@ document.getElementById("confirmarReserva").addEventListener("click", () => {
 
     alert("Reserva agregada al carrito");
 });
-
-document.getElementById("confirmarPago").addEventListener("click", async () => {
-    const carrito = obtenerCarrito();
-    const idUsuario = parseInt(sessionStorage.getItem('userId'));
-
-    if (!idUsuario) return alert("Debes iniciar sesión para confirmar el pago");
-    if (carrito.length === 0) return alert("El carrito está vacío");
-
-    try {
-        const res = await fetch("/confirmar-pago", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ idUsuario, reservas: carrito })
-        });
-
-        const data = await res.json();
-        if (!data.success) return alert(data.mensaje || "Error procesando pago");
-
-        alert("Pago confirmado y reservas guardadas");
-        limpiarCarrito(); // vacía carrito local
-    } catch (error) {
-        console.error(error);
-        alert("Error al confirmar pago");
-    }
-});
-
-// ----------------- Botón limpiar carrito -----------------
-document.getElementById("limpiarCarrito")?.addEventListener("click", limpiarCarrito);
-
-// ----------------- Inicializar carrito al cargar página -----------------
-document.addEventListener("DOMContentLoaded", mostrarCarrito);

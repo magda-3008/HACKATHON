@@ -1,3 +1,7 @@
+document.getElementById('logo').addEventListener('click', () => {
+    window.location.href = 'home2.html';
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Cargar datos del usuario al abrir la página
     cargarDatosUsuario();

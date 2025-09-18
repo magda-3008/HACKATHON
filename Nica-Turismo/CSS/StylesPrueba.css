@@ -55,6 +55,7 @@ header {
 
 .logo {
     display: flex;
+    cursor: pointer;
 }
 
 :root {
