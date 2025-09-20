@@ -296,21 +296,6 @@ header {
             font-weight: 600;
         }
         
-        .type-boat {
-            background-color: #e1f5fe;
-            color: #0288d1;
-        }
-        
-        .type-tour {
-            background-color: #e8f5e9;
-            color: #388e3c;
-        }
-        
-        .type-bus {
-            background-color: #fff3e0;
-            color: #f57c00;
-        }
-        
         .action-btn {
             background: none;
             border: none;

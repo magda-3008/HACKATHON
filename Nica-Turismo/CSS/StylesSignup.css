@@ -93,14 +93,12 @@ form .link{
     color: #65afeb;
 }
 
-/* Contenedor de input + icono */
 .password-container {
     position: relative;
     display: inline-block;
     width: 100%;
 }
 
-/* El ícono dentro del input */
 .password-container i {
     position: absolute;
     right: 15px;
@@ -125,10 +123,9 @@ form .link{
 }
 
 .input-icon input {
-    padding-left: 40px; /* deja espacio para el ícono */
+    padding-left: 40px;
 }
 
-/* El ojo de mostrar/ocultar contraseña va a la derecha */
 .password-container i.bi-eye,
 .password-container i.bi-eye-slash {
     right: 15px;

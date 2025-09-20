@@ -9,15 +9,14 @@ body {
   color: #333;
 }
 
-/* Contenedor principal */
 .contenedor {
-  max-width: 1300px;   /* ancho máximo */
-  margin: 0 auto;      /* centrar en la pantalla */
-  background: #fff;    /* fondo blanco */
-  border-radius: 12px; /* esquinas redondeadas */
-  padding: 20px;       /* espacio interno */
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* sombra */
-  min-height: calc(100vh - var(--header-h)); /* ocupa casi toda la pantalla */
+  max-width: 1300px;   
+  margin: 0 auto;      
+  background: #fff;   
+  border-radius: 12px; 
+  padding: 20px;       
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
+  min-height: calc(100vh - var(--header-h)); 
 }
 
 :root {
@@ -140,9 +139,7 @@ header {
   color: #666;
 }
 
-/* -------------------
-   Modal de reserva
-------------------- */
+/*Modal de reserva*/
 .modal-content {
   border-radius: 12px;
 }

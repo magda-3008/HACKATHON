@@ -74,9 +74,7 @@ header {
   object-fit: cover;
 }
 
-/* Estilo para cuando la imagen no carga */
 .perfil-image:before {
-    content: "Foto no disponible";
     display: block;
     position: absolute;
     top: 50%;
@@ -86,7 +84,6 @@ header {
     color: #999;
 }
 
-/* Centrar la sección de historial de reservas */
 .mt-5 {
     display: flex;
     flex-direction: column;
@@ -94,36 +91,26 @@ header {
     width: 100%;
 }
 
-/* Centrar la tabla */
 .table-responsive {
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-/* Limitar el ancho de la tabla */
 #tablaReservas {
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* Asegurar que las celdas no se expandan demasiado */
 #tablaReservas th,
 #tablaReservas td {
     white-space: nowrap;
     padding: 12px 15px;
 }
 
-/* Centrar la paginación */
+/*Paginación */
 nav[aria-label="Page navigation"] {
     display: flex;
     justify-content: center;
     width: 100%;
-}
-
-/* Centrar el mensaje de sin resultados */
-#sinResultados {
-    text-align: center;
-    max-width: 600px;
-    margin: 0 auto;
 }

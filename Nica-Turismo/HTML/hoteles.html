@@ -1,123 +1,193 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nica Turismo</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../CSS/StylesHoteles.css">
-   <link rel="shortcut icon" href="../Resource/LogoPNG.png" />
-</head>
-<body>
-  <header>
-    <div class="header_nav">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nica Turismo</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet" />
+    <link rel="stylesheet" href="../CSS/StylesHoteles.css" />
+    <link rel="shortcut icon" href="../Resource/LogoPNG.png" />
+  </head>
+  <body>
+    <header>
+      <div class="header_nav">
         <div class="logo">
-                <img src="../Resource/LogoNICATURISMO.png" alt="Logo" id="logo">
-                <span>Nica Turismo</span>
-            </div>
+          <img src="../Resource/LogoNICATURISMO.png" alt="Logo" id="logo" />
+          <span>Nica Turismo</span>
+        </div>
 
-            <ul class="nav_list">
-                <li><a href="#">Lugares a visitar</a></li>
-                <li><a href="#">Rutas turísticas</a></li>
-                <li><a href="transporte.html">Transporte</a></li>
-                <li><a href="hoteles.html">Hoteles</a></li>
-                <li id="perfilItem"><a href="perfilusuario.html">Mi perfil</a></li>
-            </ul>  
-    </div>
+        <ul class="nav_list">
+          <li><a href="#">Lugares a visitar</a></li>
+          <li><a href="#">Rutas turísticas</a></li>
+          <li><a href="transporte.html">Transporte</a></li>
+          <li><a href="hoteles.html">Hoteles</a></li>
+          <li id="perfilItem"><a href="perfilusuario.html">Mi perfil</a></li>
+        </ul>
+      </div>
     </header>
 
     <!-- Carrito flotante -->
-<div id="carritoContainer" class="carrito-flotante p-3 bg-light border shadow">
-  <h5>Mi Carrito</h5>
-  <div id="carritoItems"></div>
-  <button id="confirmarPago" class="btn btn-success mt-2">Confirmar Pago</button>
-  <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">Vaciar Carrito</button>
-</div>
-
-<!-- 🔥 Modal Resumen Pago (moverlo fuera del header y del carrito) -->
-<div class="modal fade" id="resumenPagoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Resumen de tu pago</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <ul id="resumenReservas"></ul>
-        <h4>Total: <span id="totalPagar"></span></h4>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" id="confirmarPagoFinal" class="btn btn-primary">Confirmar y pagar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <div class="contenedor">
-  <main class="container my-4">
-
-     <h1>Gestión de hoteles</h1>
-    <p>Explora las opciones según la ruta turística o mira todas juntas</p>
-
-    <!-- Filtro -->
-    <div class="mb-4">
-      <label for="rutaSelect" class="form-label fw-bold">Rutas Turísticas</label>
-      <select class="form-select" id="rutaSelect">
-       <option value="">-- Todas las rutas --</option>
-        <option value="1">Rutas de nuestro Río San Juan</option>
-        <option value="2">Nuestro Gran Lago Cocibolca</option>
-        <option value="3">Rutas Segovianas</option>
-        <option value="4">Rutas Matagalpinas</option>
-        <option value="5">Paisajes Jinoteganos</option>
-        <option value="6">Ruta de los Volcanes</option>
-        <option value="7">Rutas de Ciudades Patrimoniales</option>
-        <option value="8">Ruta de los Pueblos Artesanos</option>
-        <option value="9">Rutas Playeras</option>
-        <option value="10">Rutas Caribeñas</option>
-        <option value="11">Ruta Gastronómica</option>
-        <option value="12">Ruta Boaqueña y Chontaleñas</option>
-      </select>
+    <div
+      id="carritoContainer"
+      class="carrito-flotante p-3 bg-light border shadow">
+      <h5>Mi Carrito</h5>
+      <div id="carritoItems"></div>
+      <button id="confirmarPago" class="btn btn-success mt-2">
+        Confirmar Pago
+      </button>
+      <button id="limpiarCarrito" class="btn btn-sm btn-danger mt-2">
+        Vaciar Carrito
+      </button>
     </div>
 
-    <!-- Lista de Hoteles -->
-    <section class="lista-hotel">
-      <h2 class="mb-3">Hoteles Disponibles</h2>
-      <div id="HotelContainer"></div>
-    </section>
+    <!-- 🔥 Modal Resumen Pago (moverlo fuera del header y del carrito) -->
+    <div
+      class="modal fade"
+      id="resumenPagoModal"
+      tabindex="-1"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Resumen de tu pago</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <ul id="resumenReservas"></ul>
+            <div class="mt-3">
+              <strong>Total a pagar: </strong>
+              <span id="totalPagar" class="fw-bold text-success">$0.00</span>
+            </div>
 
-  </main>
+            <!-- 🆕 Selección de método de pago -->
+            <div class="mt-3">
+              <label for="metodoPago" class="form-label fw-bold"
+                >Método de pago</label
+              >
+              <select id="metodoPago" class="form-select">
+                <option value="">-- Selecciona un método --</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Efectivo">Efectivo</option>
+              </select>
+            </div>
+          </div>
 
-  <!-- Modal de Reserva -->
-  <div class="modal fade" id="reservaModal" tabindex="-1" aria-labelledby="reservaModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reservaModalLabel">Reservar Hotel</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <p id="HotelSeleccionadoTexto"></p>
-          <label for="cantidadCuartos" class="form-label">Cantidad de habitaciones:</label>
-          <input type="number" id="cantidadCuartos" class="form-control" min="1" value="1">
-          <div class="mb-3">
-            <label for="fechaReserva" class="form-label">Fecha de reserva</label>
-            <input type="date" id="fechaReserva" class="form-control">
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button
+              type="button"
+              id="confirmarPagoFinal"
+              class="btn btn-primary">
+              Confirmar y pagar
+            </button>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="confirmarReserva" data-id="" data-precioHotel="">Confirmar Reserva</button>
+      </div>
+    </div>
+
+    <div class="contenedor">
+      <main class="container my-4">
+        <h1>Gestión de hoteles</h1>
+        <p>Explora las opciones según la ruta turística o mira todas juntas</p>
+
+        <!-- Filtro -->
+        <div class="mb-4">
+          <label for="rutaSelect" class="form-label fw-bold"
+            >Rutas Turísticas</label
+          >
+          <select class="form-select" id="rutaSelect">
+            <option value="">-- Todas las rutas --</option>
+            <option value="1">Rutas de nuestro Río San Juan</option>
+            <option value="2">Nuestro Gran Lago Cocibolca</option>
+            <option value="3">Rutas Segovianas</option>
+            <option value="4">Rutas Matagalpinas</option>
+            <option value="5">Paisajes Jinoteganos</option>
+            <option value="6">Ruta de los Volcanes</option>
+            <option value="7">Rutas de Ciudades Patrimoniales</option>
+            <option value="8">Ruta de los Pueblos Artesanos</option>
+            <option value="9">Rutas Playeras</option>
+            <option value="10">Rutas Caribeñas</option>
+            <option value="11">Ruta Gastronómica</option>
+            <option value="12">Ruta Boaqueña y Chontaleñas</option>
+          </select>
+        </div>
+
+        <!-- Lista de Hoteles -->
+        <section class="lista-hotel">
+          <h2 class="mb-3">Hoteles Disponibles</h2>
+          <div id="HotelContainer"></div>
+        </section>
+      </main>
+
+      <!-- Modal de Reserva -->
+      <div
+        class="modal fade"
+        id="reservaModal"
+        tabindex="-1"
+        aria-labelledby="reservaModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="reservaModalLabel">Reservar Hotel</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <p id="HotelSeleccionadoTexto"></p>
+              <label for="cantidadCuartos" class="form-label"
+                >Cantidad de habitaciones:</label
+              >
+              <input
+                type="number"
+                id="cantidadCuartos"
+                class="form-control"
+                min="1"
+                value="1" />
+              <div class="mb-3">
+                <label for="fechaReserva" class="form-label"
+                  >Fecha de reserva</label
+                >
+                <input type="date" id="fechaReserva" class="form-control" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="confirmarReserva"
+                data-id=""
+                data-precioHotel="">
+                Confirmar Reserva
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../JavaScript/CodeHoteles.js"></script>
-  <script src="../JavaScript/Carrito.js"></script>
-</body>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../JavaScript/CodeHoteles.js"></script>
+    <script src="../JavaScript/Carrito.js"></script>
+  </body>
 </html>

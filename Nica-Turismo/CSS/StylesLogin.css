@@ -68,14 +68,12 @@ form label input::placeholder{
     color: #65afeb;
 }
 
-/* Contenedor de input + icono */
 .password-container {
     position: relative;
     display: inline-block;
     width: 100%;
 }
 
-/* El ícono dentro del input */
 .password-container i {
     position: absolute;
     right: 15px;

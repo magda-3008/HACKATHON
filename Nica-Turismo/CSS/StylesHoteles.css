@@ -9,15 +9,14 @@ body {
   color: #333;
 }
 
-/* Contenedor principal */
 .contenedor {
-  max-width: 1300px;   /* ancho máximo */
-  margin: 0 auto;      /* centrar en la pantalla */
-  background: #fff;    /* fondo blanco */
-  border-radius: 12px; /* esquinas redondeadas */
-  padding: 20px;       /* espacio interno */
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15); /* sombra */
-  min-height: calc(100vh - var(--header-h)); /* ocupa casi toda la pantalla */
+  max-width: 1300px;   
+  margin: 0 auto;      
+  background: #fff;    
+  border-radius: 12px; 
+  padding: 20px;       
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
+  min-height: calc(100vh - var(--header-h)); 
 }
 
 :root {
@@ -89,9 +88,7 @@ header {
   cursor: pointer;
 }
 
-/* -------------------
-   Lista de Hoteles
-------------------- */
+/*Lista de hoteles*/
 .lista-hotel h2 {
   font-weight: 600;
   color: #1b5e20;
@@ -142,9 +139,7 @@ header {
   margin-top: 5px;
 }
 
-/* -------------------
-   Modal de reserva
-------------------- */
+/*Modal de reserva*/
 .modal-content {
   border-radius: 12px;
 }
@@ -169,9 +164,7 @@ header {
   border: 2px solid #65afeb;
 }
 
-/* -------------------
-   Carrito flotante
-------------------- */
+/*Carrito*/
 .carrito-flotante {
   position: fixed;
   top: 100px;
