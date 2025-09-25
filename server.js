@@ -7,6 +7,8 @@ const session = require("express-session");
 
 const app = express();
 
+app.use('/lugares', express.static('lugares'));
+
 app.use(express.json({ limit: "10mb" })); // Aumenta el límite a 10MB
 app.use(express.urlencoded({ extended: true, limit: "10mb" })); // Aumenta el límite a 10MB
 
@@ -664,12 +666,92 @@ app.delete("/cancelarreserva/:id", (req, res) => {
   });
 });
 
+// Ruta para obtener todas las rutas turísticas
+app.get('/api/rutas-turisticas', (req, res) => {
+    const query = 'SELECT * FROM ruta_turistica ORDER BY id_ruta';
+    
+    conexion.query(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener rutas:', error);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+        
+        res.json(results);
+    });
+});
+
+app.get('/lugares', (req, res) => {
+    const query = `
+        SELECT lt.id, lt.nombre, lt.tipo, lt.descripcion, lt.ubicacion, 
+               lt.imagen_url, lt.id_ruta, rt.nombre AS ruta_nombre
+        FROM lugar_turistico lt
+        INNER JOIN ruta_turistica rt ON lt.id_ruta = rt.id_ruta
+        ORDER BY lt.id_ruta
+    `;
+    
+    conexion.query(query, (error, results) => {
+        if (error) {
+            console.error('Error al obtener lugares:', error);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+        
+        // Estructurar los datos igual que en el endpoint de hoteles
+        const lugaresPorRuta = {};
+        const rutas = {};
+
+        results.forEach((row) => {
+            const rutaId = row.id_ruta;
+
+            if (!lugaresPorRuta[rutaId]) {
+                lugaresPorRuta[rutaId] = [];
+            }
+
+            lugaresPorRuta[rutaId].push({
+                id: row.id,
+                nombre: row.nombre,
+                tipo: row.tipo,
+                descripcion: row.descripcion,
+                ubicacion: row.ubicacion,
+                imagen_url: row.imagen_url
+            });
+
+            // Guardar el nombre de la ruta
+            rutas[rutaId] = row.ruta_nombre;
+        });
+
+        res.json({ 
+            lugares: lugaresPorRuta, 
+            rutas: rutas 
+        });
+    });
+});
+
+// Ruta para obtener los lugares de una ruta específica (opcional)
+// app.get('/api/rutas/:id/lugares', (req, res) => {
+//     const rutaId = req.params.id;
+//     const query = 'SELECT * FROM lugares WHERE id_ruta = ?';
+    
+//     connection.query(query, [rutaId], (error, results) => {
+//         if (error) {
+//             console.error('Error al obtener lugares:', error);
+//             return res.status(500).json({ error: 'Error interno del servidor' });
+//         }
+        
+//         res.json(results);
+//     });
+// });
+
 app.use(express.static(path.join(__dirname, "Nica-Turismo")));
 app.use(express.static(path.join(__dirname, "public"))); // sirve transporte.html
 
 app.use(
   "/uploads/transporte",
   express.static(path.join(__dirname, "/uploads/transporte"))
+);
+
+app.use(
+  "/uploads/lugares",
+  express.static(path.join(__dirname, "/uploads/lugares"))
 );
 
 // Verificar la conexión a la base de datos

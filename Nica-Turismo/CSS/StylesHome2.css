@@ -97,7 +97,7 @@ body{
     font-weight: 700;
     text-transform: uppercase;
     color: #124955;
-    margin-top: 50px;
+    margin-top: 40px;
     margin-bottom: 25px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -182,19 +182,13 @@ body{
     color: #ffffff;
 }
 
-.boton{
-    margin: 7px;
-    background-color: #65afeb;
-    border: 0px;
-    padding: 5px;
-    color: white;
-    margin-right: 10px;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 20px;
+.btn-primary{
+  background-color: #65afeb;
+  border: none;
 }
 
-.boton:hover{
+.btn-primary:hover {
     background-color: white;
     color: #65afeb;
+    border: #65afeb;
 }

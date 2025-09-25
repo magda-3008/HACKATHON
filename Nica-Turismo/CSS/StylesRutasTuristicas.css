@@ -1,0 +1,179 @@
+:root {
+  --primary: #558145;
+  --secondary: #264653;
+  --accent: #e9c46a;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --success: #28a745;
+  --danger: #dc3545;
+  --gray: #6c757d;
+  --header-h: 80px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  padding-top: var(--header-h);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: url("../Resource/Corn-Island-Nicaragua-feature.jpeg") no-repeat
+    center center fixed;
+  background-size: cover;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: darken;
+  margin: 0;
+  color: #333;
+  min-height: 100vh;
+}
+
+.contenedor {
+  max-width: 1300px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  min-height: calc(100vh - var(--header-h) - 40px);
+
+  margin-bottom: 20px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: linear-gradient(to right, #36522c, #79b863);
+}
+
+.header_nav {
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.header_nav img {
+  height: calc(var(--header-h) - 0px);
+  width: auto;
+}
+
+.nav_list {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0 40px;
+}
+
+.nav_list a {
+  text-decoration: none;
+  color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: bold;
+}
+
+.nav_list a:hover {
+  color: #e9c46a;
+}
+
+.nav_list h4 {
+  font-size: 16px;
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logo span {
+  color: white;
+  font-weight: bold;
+  font-size: 25px;
+  margin-top: 23px;
+}
+
+.logo {
+  display: flex;
+  cursor: pointer;
+}
+
+.rutas-turisticas h2 {
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+}
+
+.ruta {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ruta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.ruta h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #2e7d32;
+}
+
+.ruta p {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.mapa-wrapper {
+  margin-bottom: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mapa-wrapper iframe {
+  display: block;
+  border: none;
+  height: 500px;
+}
+
+.btn-primary {
+  background-color: #65afeb;
+  border: 2px solid #65afeb;
+  color: white;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 6px;
+}
+
+.btn-primary:hover {
+  background-color: white;
+  color: #65afeb;
+  border: 2px solid #65afeb;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+}
