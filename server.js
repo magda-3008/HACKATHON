@@ -7,8 +7,6 @@ const session = require("express-session");
 
 const app = express();
 
-app.use('/lugares', express.static('lugares'));
-
 app.use(express.json({ limit: "10mb" })); // Aumenta el límite a 10MB
 app.use(express.urlencoded({ extended: true, limit: "10mb" })); // Aumenta el límite a 10MB
 
@@ -695,33 +693,29 @@ app.get('/lugares', (req, res) => {
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
         
-        // Estructurar los datos igual que en el endpoint de hoteles
-        const lugaresPorRuta = {};
-        const rutas = {};
+        // Convertir a la estructura que espera el frontend
+        const lugares = results.map(row => ({
+            id: row.id,
+            nombre: row.nombre,
+            tipo: row.tipo,
+            descripcion: row.descripcion,
+            ubicacion: row.ubicacion,
+            imagen_url: row.imagen_url,
+            ruta_id: row.id_ruta
+        }));
 
-        results.forEach((row) => {
-            const rutaId = row.id_ruta;
-
-            if (!lugaresPorRuta[rutaId]) {
-                lugaresPorRuta[rutaId] = [];
-            }
-
-            lugaresPorRuta[rutaId].push({
-                id: row.id,
-                nombre: row.nombre,
-                tipo: row.tipo,
-                descripcion: row.descripcion,
-                ubicacion: row.ubicacion,
-                imagen_url: row.imagen_url
-            });
-
-            // Guardar el nombre de la ruta
-            rutas[rutaId] = row.ruta_nombre;
+        // Obtener rutas únicas
+        const rutasUnicas = [...new Set(results.map(row => row.id_ruta))].map(rutaId => {
+            const ruta = results.find(row => row.id_ruta === rutaId);
+            return {
+                id: rutaId,
+                nombre: ruta.ruta_nombre
+            };
         });
 
         res.json({ 
-            lugares: lugaresPorRuta, 
-            rutas: rutas 
+            lugares: lugares, // Array plano de lugares
+            rutas: rutasUnicas // Array de objetos ruta
         });
     });
 });
@@ -751,7 +745,7 @@ app.use(
 
 app.use(
   "/uploads/lugares",
-  express.static(path.join(__dirname, "/uploads/lugares"))
+  express.static(path.join(__dirname, "/uploads/lug-tur"))
 );
 
 // Verificar la conexión a la base de datos

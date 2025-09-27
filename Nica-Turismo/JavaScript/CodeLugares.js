@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const lugaresContainer = document.getElementById("lugaresContainer");
 const rutaSelect = document.getElementById("rutaSelect");
 
-let LUGARES_DATA = {};
-let RUTAS_DATA = {};
+let LUGARES_DATA = [];
+let RUTAS_DATA = [];
 
 async function cargarLugares() {
   try {
@@ -32,44 +32,35 @@ async function cargarLugares() {
 
     const data = await res.json();
     console.log("Datos recibidos:", data);
-    
-    // DEBUG: Verificar las URLs de imágenes
-    console.log("URLs de imágenes recibidas:");
-    Object.keys(data.lugares).forEach(rutaId => {
-      data.lugares[rutaId].forEach(lugar => {
-        console.log(`Lugar: ${lugar.nombre}, Imagen: ${lugar.imagen_url}`);
-      });
-    });
 
-    LUGARES_DATA = data.lugares || {};
-    RUTAS_DATA = data.rutas || {};
+    // Ajustamos según la estructura real de tu API
+    LUGARES_DATA = data.lugares || data || [];
+    RUTAS_DATA = data.rutas || [];
 
     llenarSelectRutas();
     renderLugares();
   } catch (error) {
     console.error("Error cargando lugares:", error);
     lugaresContainer.innerHTML = `
-      <div class="alert alert-danger">
-        Error al cargar lugares turísticos: ${error.message}
-      </div>
-    `;
+            <div class="alert alert-danger">
+              Error al cargar lugares turísticos: ${error.message}
+            </div>
+          `;
   }
 }
 
 function llenarSelectRutas() {
   rutaSelect.innerHTML = '<option value="">-- Todas las rutas --</option>';
 
-  const rutaIds = Object.keys(RUTAS_DATA);
-
-  if (rutaIds.length > 0) {
-    rutaIds.forEach((id) => {
+  if (RUTAS_DATA.length > 0) {
+    RUTAS_DATA.forEach((ruta) => {
       const option = document.createElement("option");
-      option.value = id;
-      option.textContent = RUTAS_DATA[id];
+      option.value = ruta.id || ruta.ruta_id;
+      option.textContent = ruta.nombre || ruta.ruta_nombre;
       rutaSelect.appendChild(option);
     });
   } else {
-    // Opciones por defecto si no se recibieron rutas
+    // Si no hay rutas específicas, usar las opciones por defecto
     const rutasPorDefecto = [
       { id: "1", nombre: "Rutas de nuestro Río San Juan" },
       { id: "2", nombre: "Nuestro Gran Lago Cocibolca" },
@@ -96,51 +87,78 @@ function llenarSelectRutas() {
 
 function renderLugares(filtroRutaId = "") {
   console.log("Renderizando lugares. Filtro:", filtroRutaId);
+  console.log("Datos disponibles:", LUGARES_DATA);
+
   lugaresContainer.innerHTML = "";
 
-  const rutaIds = Object.keys(LUGARES_DATA);
+  let lugaresFiltrados = LUGARES_DATA;
 
-  if (rutaIds.length === 0) {
+  if (filtroRutaId) {
+    lugaresFiltrados = LUGARES_DATA.filter(
+      (lugar) => lugar.ruta_id == filtroRutaId || lugar.id_ruta == filtroRutaId
+    );
+  }
+
+  console.log("Lugares filtrados:", lugaresFiltrados);
+
+  if (!lugaresFiltrados.length) {
     lugaresContainer.innerHTML = `
-      <div class="alert alert-warning">
-        No hay lugares turísticos disponibles.
-      </div>
-    `;
+            <div class="alert alert-warning">
+              No hay lugares para ${filtroRutaId ? "esta ruta" : "mostrar"}.
+            </div>
+          `;
     return;
   }
 
-  // Si hay filtro, solo renderizamos esa ruta
-  if (filtroRutaId) {
-    const lugares = LUGARES_DATA[filtroRutaId] || [];
-    const rutaNombre = obtenerNombreRuta(filtroRutaId);
+  // Agrupar por ruta si no hay filtro
+  if (!filtroRutaId) {
+    const lugaresPorRuta = {};
 
-    if (lugares.length === 0) {
-      lugaresContainer.innerHTML = `
-        <div class="alert alert-warning">
-          No hay lugares para esta ruta.
-        </div>
-      `;
-      return;
-    }
-
-    const rutaDiv = crearSeccionRuta(rutaNombre, lugares);
-    lugaresContainer.appendChild(rutaDiv);
-  } else {
-    // Renderizar todas las rutas
-    rutaIds.forEach((rutaId) => {
-      const rutaNombre = obtenerNombreRuta(rutaId);
-      const lugares = LUGARES_DATA[rutaId] || [];
-
-      if (lugares.length > 0) {
-        const rutaDiv = crearSeccionRuta(rutaNombre, lugares);
-        lugaresContainer.appendChild(rutaDiv);
+    lugaresFiltrados.forEach((lugar) => {
+      const rutaId = lugar.ruta_id || lugar.id_ruta || "sin-ruta";
+      if (!lugaresPorRuta[rutaId]) {
+        lugaresPorRuta[rutaId] = [];
       }
+      lugaresPorRuta[rutaId].push(lugar);
     });
+
+    Object.keys(lugaresPorRuta).forEach((rutaId) => {
+      const rutaNombre = obtenerNombreRuta(rutaId);
+      const lugaresRuta = lugaresPorRuta[rutaId];
+
+      const rutaDiv = crearSeccionRuta(rutaNombre, lugaresRuta);
+      lugaresContainer.appendChild(rutaDiv);
+    });
+  } else {
+    const rutaNombre = obtenerNombreRuta(filtroRutaId);
+    const rutaDiv = crearSeccionRuta(rutaNombre, lugaresFiltrados);
+    lugaresContainer.appendChild(rutaDiv);
   }
 }
 
 function obtenerNombreRuta(rutaId) {
-  return RUTAS_DATA[rutaId] || `Ruta ${rutaId}`;
+  if (RUTAS_DATA.length > 0) {
+    const ruta = RUTAS_DATA.find((r) => r.id == rutaId || r.ruta_id == rutaId);
+    return ruta ? ruta.nombre || ruta.ruta_nombre : `Ruta ${rutaId}`;
+  }
+
+  // Nombres por defecto si no hay datos de rutas
+  const nombresPorDefecto = {
+    1: "Rutas de nuestro Río San Juan",
+    2: "Nuestro Gran Lago Cocibolca",
+    3: "Rutas Segovianas",
+    4: "Rutas Matagalpinas",
+    5: "Paisajes Jinoteganos",
+    6: "Ruta de los Volcanes",
+    7: "Rutas de Ciudades Patrimoniales",
+    8: "Ruta de los Pueblos Artesanos",
+    9: "Rutas Playeras",
+    10: "Rutas Caribeñas",
+    11: "Ruta Gastronómica",
+    12: "Ruta Boaqueña y Chontaleñas",
+  };
+
+  return nombresPorDefecto[rutaId] || `Ruta ${rutaId}`;
 }
 
 function crearSeccionRuta(rutaNombre, lugares) {
@@ -155,27 +173,22 @@ function crearSeccionRuta(rutaNombre, lugares) {
     const card = document.createElement("div");
     card.classList.add("col-md-4", "mb-3");
 
-    // Usamos directamente la URL de la DB, sin concatenar
-    const imgUrl = lugar.imagen_url?.trim() || "";
-
-    const imgContent = imgUrl
-      ? `<img src="${imgUrl}" class="card-img-top" alt="${lugar.nombre}" 
-          style="height:200px;object-fit:cover;"
-          onerror="this.onerror=null;this.src='https://via.placeholder.com/200x200?text=Sin+imagen';">`
-      : `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" 
-          style="height:200px;">Imagen no disponible</div>`;
+    const imgContent =
+      lugar.imagen_url && lugar.imagen_url.trim() !== ""
+        ? `<img src="${lugar.imagen_url}" class="card-img-top" alt="${lugar.nombre}" style="height:200px;object-fit:cover;">`
+        : `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height:200px;">Imagen no disponible</div>`;
 
     card.innerHTML = `
-      <div class="card h-100">
-        ${imgContent}
-        <div class="card-body">
-          <h5 class="card-title">${lugar.nombre}</h5>
-          <p class="card-text"><strong>Tipo:</strong> ${lugar.tipo}</p>
-          <p class="card-text"><strong>Ubicación:</strong> ${lugar.ubicacion}</p>
-          <p class="card-text">${lugar.descripcion}</p>
-        </div>
-      </div>
-    `;
+            <div class="card h-100">
+              ${imgContent}
+              <div class="card-body">
+                <h5 class="card-title">${lugar.nombre}</h5>
+                <p class="card-text"><strong>Tipo:</strong> ${lugar.tipo}</p>
+                <p class="card-text"><strong>Ubicación:</strong> ${lugar.ubicacion}</p>
+                <p class="card-text">${lugar.descripcion}</p>
+              </div>
+            </div>
+          `;
 
     cardsContainer.appendChild(card);
   });
@@ -187,21 +200,4 @@ function crearSeccionRuta(rutaNombre, lugares) {
 rutaSelect.addEventListener("change", (e) => {
   const idRuta = e.target.value;
   renderLugares(idRuta);
-});
-
-document.getElementById("logo").addEventListener("click", () => {
-  window.location.href = "home2.html";
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const perfilItem = document.getElementById("perfilItem");
-  const userId = sessionStorage.getItem("userId");
-
-  if (userId) {
-    // Usuario logueado → mostrar perfil
-    perfilItem.innerHTML = `<a href="perfilusuario.html">Mi perfil</a>`;
-  } else {
-    // Usuario NO logueado → mostrar registrarse
-    perfilItem.innerHTML = `<a href="signup.html">Regístrate</a>`;
-  }
 });
