@@ -28,10 +28,10 @@ app.use(
 
 // Configuración de la conexión a la base de datos
 const conexion = mysql.createConnection({
-  host: "sql207.hstn.me",
-  user: "mseet_40046723",
-  password: "aXrpw4TD6oAu",
-  database: "mseet_40046723_nicaturismobdd"
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "nica_turismo_bdd",
 });
 
 // Configuración de multer para almacenar imágenes
@@ -757,11 +757,6 @@ conexion.connect(function (err) {
     console.log("Conexión exitosa a la base de datos");
   }
 });
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "Nica-Turismo/index.html"));
-});
-
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
