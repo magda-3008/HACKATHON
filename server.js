@@ -28,10 +28,10 @@ app.use(
 
 // Configuración de la conexión a la base de datos
 const conexion = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "nica_turismo_bdd",
+  host: "sql110.infinityfree.com",           
+  user: "if0_40046065",                     
+  password: "uEsAOr5gBLM0",          
+  database: "if0_40046065_nica_turismo_bdd", 
 });
 
 // Configuración de multer para almacenar imágenes
