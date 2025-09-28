@@ -30,7 +30,7 @@ async function Loguear() {
         sessionStorage.setItem("userId", userData.usuario.id);
       }
 
-      window.location = "home2.html"; // redirige si está correcto
+      window.location = "index.html"; // redirige si está correcto
     } else {
       const registroMessageLogin = document.getElementById(
         "registro-messageLogin"

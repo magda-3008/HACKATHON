@@ -1,0 +1,21 @@
+{
+  "name": "hackathon",
+  "version": "1.0.0",
+  "description": "Nica Turismo es un sistema web que facilita el acceso de turistas a los distintos servicios disponibles para visitar Nicaragua. La plataforma centraliza información y reservas en un solo sitio, ofreciendo una experiencia más rápida, confiable y segura.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql": "^2.18.1",
+    "cors": "^2.8.5",
+    "multer": "^1.4.4",
+    "express-session": "^1.17.3"
+}
+,
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -79,7 +79,7 @@ function verLugares(idRuta) {
 document.addEventListener("DOMContentLoaded", cargarRutas);
 
 document.getElementById("logo").addEventListener("click", () => {
-  window.location.href = "home2.html";
+  window.location.href = "index.html";
 });
 
 document.addEventListener("DOMContentLoaded", () => {
