@@ -758,6 +758,11 @@ conexion.connect(function (err) {
   }
 });
 
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "Nica-Turismo/index.html"));
+});
+
+
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
