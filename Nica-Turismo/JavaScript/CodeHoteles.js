@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     perfilItem.innerHTML = `<a href="signup.html">Regístrate</a>`;
   }
 
-  //Configurar fecha minima en los inputs
+  // Configurar fecha mínima en los inputs
   const fechaInputs = document.querySelectorAll('input[type="date"]');
   fechaInputs.forEach((input) => {
     input.min = new Date().toISOString().split("T")[0];
@@ -45,31 +45,41 @@ async function cargarHoteles() {
     const data = await res.json();
     HOTELES_DATA = data.hoteles || {};
     RUTA_NOMBRES = data.rutas || {};
-    renderHoteles();
+    renderHotelesConFiltros();
   } catch (error) {
     console.error("Error cargando hoteles:", error);
     hotelContainer.innerHTML = `<div class="alert alert-danger">Error al cargar hoteles</div>`;
   }
 }
 
-function renderHoteles(filtroRuta = "") {
+function renderHotelesConFiltros() {
+  const filtroRuta = rutaSelect.value;
+  const precioMin = parseFloat(document.getElementById("precioMin").value) || 0;
+  const precioMax = parseFloat(document.getElementById("precioMax").value) || Infinity;
+  const estrellasFiltro = parseInt(document.getElementById("estrellasSelect").value) || 0;
+
   cardSeleccionada = null;
   hotelContainer.innerHTML = "";
 
-  const keys = filtroRuta
-    ? HOTELES_DATA[filtroRuta]
-      ? [filtroRuta]
-      : []
-    : Object.keys(HOTELES_DATA);
+  let keys = filtroRuta ? (HOTELES_DATA[filtroRuta] ? [filtroRuta] : []) : Object.keys(HOTELES_DATA);
 
   if (!keys.length) {
-    hotelContainer.innerHTML = `<div class="alert alert-warning">No hay hoteles para esta ruta.</div>`;
+    hotelContainer.innerHTML = `<div class="alert alert-warning">No hay hoteles disponibles.</div>`;
     return;
   }
 
   keys.forEach((rutaSlug) => {
     const rutaNombre = RUTA_NOMBRES[rutaSlug] || "Ruta desconocida";
     const hoteles = HOTELES_DATA[rutaSlug];
+
+    // Aplicar filtros de precio y estrellas
+    const hotelesFiltrados = hoteles.filter(hotel => {
+      const precioValido = hotel.precio >= precioMin && hotel.precio <= precioMax;
+      const estrellasValido = estrellasFiltro === 0 || Math.round(hotel.estrellas) === estrellasFiltro;
+      return precioValido && estrellasValido;
+    });
+
+    if (!hotelesFiltrados.length) return;
 
     const rutaDiv = document.createElement("div");
     rutaDiv.classList.add("ruta-section", "mb-4");
@@ -78,7 +88,7 @@ function renderHoteles(filtroRuta = "") {
     const cardsContainer = document.createElement("div");
     cardsContainer.classList.add("d-flex", "flex-wrap", "gap-3");
 
-    hoteles.forEach((hotel) => {
+    hotelesFiltrados.forEach((hotel) => {
       const card = document.createElement("div");
       card.classList.add("card", "p-2");
       card.style.width = "22rem";
@@ -88,7 +98,6 @@ function renderHoteles(filtroRuta = "") {
           ? `<img src="${hotel.img}" class="card-img-top" alt="${hotel.nombre}" height="200" style="object-fit:cover;">`
           : `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height:200px;">Imagen no disponible</div>`;
 
-      // Convertir número de estrellas en íconos
       const estrellas = Math.round(hotel.estrellas);
       let estrellasHTML = "";
       for (let i = 0; i < 5; i++) {
@@ -96,25 +105,28 @@ function renderHoteles(filtroRuta = "") {
       }
 
       card.innerHTML = `
-                ${imgContent}
-                <div class="card-body">
-                    <h5 class="card-title">${hotel.nombre}</h5>
-                    <p class="card-text">${hotel.descripcion}</p>
-                    <p class="card-text"><strong>Ubicación:</strong> ${hotel.ubicacion}</p>
-                    <p class="card-text"><strong>Precio por noche:</strong> C$ ${hotel.precio}</p>
-                    <p class="card-text"><strong>Estrellas: </strong><span style="color: gold; font-size: 1.1em;">${estrellasHTML}</span></p>
-                    <button class="btn btn-primary reservar-btn" data-id_hotel="${hotel.id_hotel}" data-nombre="${hotel.nombre}"
-                        data-precioHotel="${hotel.precio}">Reservar</button>
-                </div>
-            `;
+        ${imgContent}
+        <div class="card-body">
+          <h5 class="card-title">${hotel.nombre}</h5>
+          <p class="card-text">${hotel.descripcion}</p>
+          <p class="card-text"><strong>Ubicación:</strong> ${hotel.ubicacion}</p>
+          <p class="card-text"><strong>Precio por noche:</strong> C$ ${hotel.precio}</p>
+          <p class="card-text"><strong>Estrellas: </strong><span style="color: gold; font-size: 1.1em;">${estrellasHTML}</span></p>
+          <button class="btn btn-primary reservar-btn" data-id_hotel="${hotel.id_hotel}" data-nombre="${hotel.nombre}" data-precioHotel="${hotel.precio}">Reservar</button>
+        </div>
+      `;
 
       card.addEventListener("click", () => seleccionarHotel(hotel, card));
       cardsContainer.appendChild(card);
     });
 
-    rutaDiv.appendChild(cardsContainer);
-    hotelContainer.appendChild(rutaDiv);
+    if (cardsContainer.childNodes.length) rutaDiv.appendChild(cardsContainer);
+    if (cardsContainer.childNodes.length) hotelContainer.appendChild(rutaDiv);
   });
+
+  if (!hotelContainer.hasChildNodes()) {
+    hotelContainer.innerHTML = `<div class="alert alert-info">No se encontraron hoteles con los filtros seleccionados.</div>`;
+  }
 }
 
 function seleccionarHotel(hotel, card) {
@@ -138,8 +150,7 @@ hotelContainer.addEventListener("click", (e) => {
     if (!hotelSeleccionado)
       return alert("No se encontró el hotel seleccionado");
 
-    document.getElementById("HotelSeleccionadoTexto").textContent =
-      hotelSeleccionado.nombre;
+    document.getElementById("HotelSeleccionadoTexto").textContent = hotelSeleccionado.nombre;
 
     const reservarBtn = document.getElementById("confirmarReserva");
     reservarBtn.dataset.id_hotel = hotelSeleccionado.id_hotel;
@@ -156,11 +167,6 @@ hotelContainer.addEventListener("click", (e) => {
   }
 });
 
-rutaSelect.addEventListener("change", (e) => {
-  const idRuta = e.target.value;
-  renderHoteles(idRuta);
-});
-
 function agregarAlCarrito(reserva) {
   let carrito = obtenerCarrito();
   const index = carrito.findIndex(
@@ -174,17 +180,11 @@ function agregarAlCarrito(reserva) {
 }
 
 document.getElementById("confirmarReserva").addEventListener("click", () => {
-  const cant_cuartos = parseInt(
-    document.getElementById("cantidadCuartos").value
-  );
+  const cant_cuartos = parseInt(document.getElementById("cantidadCuartos").value);
   const nombre = document.getElementById("HotelSeleccionadoTexto").textContent;
-  const idHotel = parseInt(
-    document.getElementById("confirmarReserva").dataset.id_hotel
-  );
+  const idHotel = parseInt(document.getElementById("confirmarReserva").dataset.id_hotel);
   const fechaReserva = document.getElementById("fechaReserva").value; // YYYY-MM-DD
-  const precio = parseFloat(
-    document.getElementById("confirmarReserva").dataset.precio
-  );
+  const precio = parseFloat(document.getElementById("confirmarReserva").dataset.precio);
 
   if (!idHotel) return alert("No se ha seleccionado un hotel");
   if (!fechaReserva) return alert("Debes seleccionar una fecha");
@@ -208,3 +208,9 @@ document.getElementById("confirmarReserva").addEventListener("click", () => {
 
   alert("Reserva agregada al carrito");
 });
+
+//Listeners para filtros
+rutaSelect.addEventListener("change", renderHotelesConFiltros);
+document.getElementById("precioMin").addEventListener("input", renderHotelesConFiltros);
+document.getElementById("precioMax").addEventListener("input", renderHotelesConFiltros);
+document.getElementById("estrellasSelect").addEventListener("change", renderHotelesConFiltros);

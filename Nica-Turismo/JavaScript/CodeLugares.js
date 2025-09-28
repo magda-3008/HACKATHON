@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const lugaresContainer = document.getElementById("lugaresContainer");
 const rutaSelect = document.getElementById("rutaSelect");
+const tipoSelect = document.getElementById("tipoSelect"); // Nuevo select
 
 let LUGARES_DATA = [];
 let RUTAS_DATA = [];
@@ -33,19 +34,19 @@ async function cargarLugares() {
     const data = await res.json();
     console.log("Datos recibidos:", data);
 
-    // Ajustamos según la estructura real de tu API
     LUGARES_DATA = data.lugares || data || [];
     RUTAS_DATA = data.rutas || [];
 
     llenarSelectRutas();
+    llenarSelectTipos(); // <-- llenar tipos
     renderLugares();
   } catch (error) {
     console.error("Error cargando lugares:", error);
     lugaresContainer.innerHTML = `
-            <div class="alert alert-danger">
-              Error al cargar lugares turísticos: ${error.message}
-            </div>
-          `;
+      <div class="alert alert-danger">
+        Error al cargar lugares turísticos: ${error.message}
+      </div>
+    `;
   }
 }
 
@@ -60,7 +61,6 @@ function llenarSelectRutas() {
       rutaSelect.appendChild(option);
     });
   } else {
-    // Si no hay rutas específicas, usar las opciones por defecto
     const rutasPorDefecto = [
       { id: "1", nombre: "Rutas de nuestro Río San Juan" },
       { id: "2", nombre: "Nuestro Gran Lago Cocibolca" },
@@ -85,32 +85,62 @@ function llenarSelectRutas() {
   }
 }
 
-function renderLugares(filtroRutaId = "") {
-  console.log("Renderizando lugares. Filtro:", filtroRutaId);
-  console.log("Datos disponibles:", LUGARES_DATA);
+// 🆕 Llenar select con tipos de turismo
+function llenarSelectTipos() {
+  const tipos = [
+    "Religioso",
+    "Histórico",
+    "Museo",
+    "Parque",
+    "Cultural",
+    "Artesanal",
+    "Natural",
+    "Playa",
+    "Gastronómico",
+    "Mirador",
+    "Arqueológico",
+  ];
 
+  tipoSelect.innerHTML = '<option value="">-- Todos los tipos --</option>';
+
+  tipos.forEach((tipo) => {
+    const option = document.createElement("option");
+    option.value = tipo;
+    option.textContent = tipo;
+    tipoSelect.appendChild(option);
+  });
+}
+
+function renderLugares(filtroRutaId = "", filtroTipo = "") {
+  console.log("Renderizando lugares. Filtro ruta:", filtroRutaId, "tipo:", filtroTipo);
   lugaresContainer.innerHTML = "";
 
   let lugaresFiltrados = LUGARES_DATA;
 
+  // Filtrar por ruta si se selecciona
   if (filtroRutaId) {
-    lugaresFiltrados = LUGARES_DATA.filter(
+    lugaresFiltrados = lugaresFiltrados.filter(
       (lugar) => lugar.ruta_id == filtroRutaId || lugar.id_ruta == filtroRutaId
     );
   }
 
-  console.log("Lugares filtrados:", lugaresFiltrados);
+  // 🆕 Filtrar por tipo si se selecciona
+  if (filtroTipo) {
+    lugaresFiltrados = lugaresFiltrados.filter(
+      (lugar) => lugar.tipo && lugar.tipo.trim().toLowerCase() === filtroTipo.trim().toLowerCase()
+    );
+  }
 
   if (!lugaresFiltrados.length) {
     lugaresContainer.innerHTML = `
-            <div class="alert alert-warning">
-              No hay lugares para ${filtroRutaId ? "esta ruta" : "mostrar"}.
-            </div>
-          `;
+      <div class="alert alert-warning">
+        No hay lugares que coincidan con los filtros seleccionados.
+      </div>
+    `;
     return;
   }
 
-  // Agrupar por ruta si no hay filtro
+  // Agrupar por ruta si no hay filtro de ruta
   if (!filtroRutaId) {
     const lugaresPorRuta = {};
 
@@ -125,7 +155,6 @@ function renderLugares(filtroRutaId = "") {
     Object.keys(lugaresPorRuta).forEach((rutaId) => {
       const rutaNombre = obtenerNombreRuta(rutaId);
       const lugaresRuta = lugaresPorRuta[rutaId];
-
       const rutaDiv = crearSeccionRuta(rutaNombre, lugaresRuta);
       lugaresContainer.appendChild(rutaDiv);
     });
@@ -142,7 +171,6 @@ function obtenerNombreRuta(rutaId) {
     return ruta ? ruta.nombre || ruta.ruta_nombre : `Ruta ${rutaId}`;
   }
 
-  // Nombres por defecto si no hay datos de rutas
   const nombresPorDefecto = {
     1: "Rutas de nuestro Río San Juan",
     2: "Nuestro Gran Lago Cocibolca",
@@ -179,16 +207,16 @@ function crearSeccionRuta(rutaNombre, lugares) {
         : `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height:200px;">Imagen no disponible</div>`;
 
     card.innerHTML = `
-            <div class="card h-100">
-              ${imgContent}
-              <div class="card-body">
-                <h5 class="card-title">${lugar.nombre}</h5>
-                <p class="card-text"><strong>Tipo:</strong> ${lugar.tipo}</p>
-                <p class="card-text"><strong>Ubicación:</strong> ${lugar.ubicacion}</p>
-                <p class="card-text">${lugar.descripcion}</p>
-              </div>
-            </div>
-          `;
+      <div class="card h-100">
+        ${imgContent}
+        <div class="card-body">
+          <h5 class="card-title">${lugar.nombre}</h5>
+          <p class="card-text"><strong>Tipo:</strong> ${lugar.tipo}</p>
+          <p class="card-text"><strong>Ubicación:</strong> ${lugar.ubicacion}</p>
+          <p class="card-text">${lugar.descripcion}</p>
+        </div>
+      </div>
+    `;
 
     cardsContainer.appendChild(card);
   });
@@ -197,7 +225,11 @@ function crearSeccionRuta(rutaNombre, lugares) {
   return rutaDiv;
 }
 
-rutaSelect.addEventListener("change", (e) => {
-  const idRuta = e.target.value;
-  renderLugares(idRuta);
+// Detectar cambios en los selects
+rutaSelect.addEventListener("change", () => {
+  renderLugares(rutaSelect.value, tipoSelect.value);
+});
+
+tipoSelect.addEventListener("change", () => {
+  renderLugares(rutaSelect.value, tipoSelect.value);
 });

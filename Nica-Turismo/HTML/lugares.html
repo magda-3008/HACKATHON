@@ -34,15 +34,29 @@
         <h1>Lugares Turísticos</h1>
         <p>Explora los lugares según la ruta turística o mira todos juntos</p>
 
-        <!-- Filtro -->
+        <!-- Filtros -->
         <div class="mb-4">
-          <label for="rutaSelect" class="form-label fw-bold"
-            >Rutas Turísticas</label
-          >
-          <select class="form-select" id="rutaSelect">
-            <option value="">-- Todas las rutas --</option>
-            <!-- Las opciones se llenarán dinámicamente -->
-          </select>
+          <h5>Filtrar por:</h5>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-6">
+              <label for="rutaSelect" class="form-label fw-bold"
+                >Rutas Turísticas</label
+              >
+              <select class="form-select" id="rutaSelect">
+                <option value="">-- Todas las rutas --</option>
+                <!-- Opciones dinámicas -->
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="tipoSelect" class="form-label fw-bold"
+                >Tipo de Turismo</label
+              >
+              <select id="tipoSelect" class="form-select">
+                <option value="">-- Todos los tipos --</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- Lista de lugares -->

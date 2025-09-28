@@ -2,70 +2,97 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: arial;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body{
     align-items: center;
-    background-image: url(../Resource/hojasverdesinicio.jpg);
+    background-image: url(../Resource/SanJuan.jpg);
     background-size: cover;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
+    background-position: center;
+    background-attachment: fixed;
     display: flex;
     justify-content: center;
     min-height: 100vh;
+    padding: 20px;
 }
 
 form{
     display: flex;
     flex-direction: column;
-    background-color: #26a9cabe;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
     text-align: center;
-    padding: 30px 30px;
-    box-shadow: 0 5px 10px #15e48b;
+    padding: 40px 35px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 420px;
 }
 
 form .titt{
-    color: white;
-    font-size: 37px;
-    font-weight: 800;
-    margin-bottom: 30px;
+    color: #4a90e2;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 35px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 form label{
-    margin-bottom: 30px;
+    margin-bottom: 25px;
+    position: relative;
 }
 
 form label input{
-    border:solid #9b9c99;
-    border-radius: 15px;
-    color: black;
-    padding: 0 15px;
-    font-size: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: #333;
+    padding: 0 20px;
+    font-size: 16px;
     margin: 1px;
-    width: 350px;
-    height: 40px;
+    width: 100%;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.95);
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+form label input:focus {
+    border-color: #15e48b;
     background: white;
+    box-shadow: 0 0 0 3px rgba(21, 228, 139, 0.2);
+    transform: scale(1.02);
 }
 
 form label input::placeholder{
-    color:#a8a3a5d7 ;
+    color: #a8a8a8;
+    font-weight: 400;
 }
 
 .ac{
-    margin: 7px;
-    background-color: #65afeb;
-    border: 0px;
-    padding: 5px;
+    margin: 10px 0;
+    background: linear-gradient(135deg, #65afeb, #4a90e2);
+    border: none;
+    padding: 14px;
     color: white;
-    margin-right: 10px;
     text-decoration: none;
-    border-radius: 10px;
-    font-size: 20px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(101, 175, 235, 0.3);
+    letter-spacing: 0.5px;
 }
 
 .ac:hover{
-    background-color: white;
-    border: 2px solid #65afeb;
+    background: linear-gradient(135deg, white, #bfd6ee);
+    transform: translateY(-2px);
     color: #65afeb;
+    box-shadow: 0 6px 20px rgba(101, 175, 235, 0.4);
 }
 
 .password-container {
@@ -76,10 +103,26 @@ form label input::placeholder{
 
 .password-container i {
     position: absolute;
-    right: 15px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     color: #666;
+    transition: color 0.3s ease;
+    z-index: 2;
+}
+
+.password-container i:hover {
+    color: #15e48b;
+}
+
+.text .link {
+  color: #4a90e2;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.text .link:hover {
+  text-decoration: underline;
 }

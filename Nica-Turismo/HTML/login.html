@@ -1,34 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nica Turismo</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="../CSS/StylesLogin.css">
-     <link rel="shortcut icon" href="../Resource/LogoPNG.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="../CSS/StylesLogin.css" />
+    <link rel="shortcut icon" href="../Resource/LogoPNG.png" />
     <script src="../JavaScript/Code.js" defer></script>
-</head>
-<body>
-     <form action="" method="post" onsubmit="return false;">
-        <h2 class="titt"><strong>Bienvenido</strong></h2>
+  </head>
+  <body>
+    <form action="" method="post" onsubmit="return false;">
+      <h2 class="titt"><strong>Bienvenido</strong></h2>
 
-        <label for="usuario">
-            <input type="text" placeholder="👤Usuario" id="usuario" required>
-        </label>
+      <label for="usuario">
+        <input type="text" placeholder="👤Usuario" id="usuario" required />
+      </label>
 
-        <label for="clave" class="password-container">
-        <input type="password" placeholder="🔒Contraseña" id="clave" required>
+      <label for="clave" class="password-container">
+        <input type="password" placeholder="🔒Contraseña" id="clave" required />
         <i class="bi bi-eye" id="togglePassword"></i>
-        </label>
+      </label>
 
-        <p id="registro-messageLogin"></p>
+      <p id="registro-messageLogin"></p>
 
-        <input type="button" value="Inicia sesión" class="ac" onclick="Loguear()">
+      <input
+        type="button"
+        value="Iniciar sesión"
+        class="ac"
+        onclick="Loguear()" />
 
-        <br>
+      <br />
 
-        <p class="text" >¿No te has registrado? <a href="signup.html" class="link">Entra aquí</a></p><br>
+      <p class="text">
+        ¿No te has registrado? <a href="signup.html" class="link">Entra aquí</a>
+      </p>
+      <br />
     </form>
-</body>
+  </body>
 </html>

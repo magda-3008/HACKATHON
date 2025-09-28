@@ -72,11 +72,7 @@ function mostrarRutas(rutas) {
 
 // Función para ver los lugares de una ruta (debes implementar esta funcionalidad)
 function verLugares(idRuta) {
-  // Aquí puedes redirigir a otra página o mostrar un modal con los lugares
-  alert(
-    `Mostrando lugares de la ruta ${idRuta}. Esta funcionalidad debe ser implementada.`
-  );
-  // Ejemplo: window.location.href = `/lugares.html?ruta=${idRuta}`;
+  window.location.href = `lugares.html`;
 }
 
 // Cargar las rutas cuando la página esté lista

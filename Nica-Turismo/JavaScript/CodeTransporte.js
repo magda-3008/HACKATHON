@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
 // --- refs DOM ---
 const transportContainer = document.getElementById("transportContainer");
 const rutaSelect = document.getElementById("rutaSelect");
+const tipoSelect = document.getElementById("tipoSelect"); // nuevo filtro por tipo
+const precioMinInput = document.getElementById("precioMin"); // nuevo filtro por precio mínimo
+const precioMaxInput = document.getElementById("precioMax"); // nuevo filtro por precio máximo
 let cardSeleccionada = null;
 
 let TRANSPORTES_DATA = {};
@@ -71,9 +74,23 @@ function renderTransportes(filtroRuta = "") {
     return;
   }
 
+  const tipoFiltro = tipoSelect ? tipoSelect.value : "";
+  const precioMin = parseFloat(precioMinInput?.value) || 0;
+  const precioMax = parseFloat(precioMaxInput?.value) || Infinity;
+
   keys.forEach((rutaSlug) => {
     const rutaNombre = RUTA_NOMBRES[rutaSlug] || "Ruta desconocida";
     const transportes = TRANSPORTES_DATA[rutaSlug];
+
+    // Filtramos por tipo y rango de precios
+    const transportesFiltrados = transportes.filter((transporte) => {
+      const cumpleTipo = tipoFiltro ? transporte.tipo === tipoFiltro : true;
+      const cumplePrecio =
+        transporte.precio >= precioMin && transporte.precio <= precioMax;
+      return cumpleTipo && cumplePrecio;
+    });
+
+    if (transportesFiltrados.length === 0) return;
 
     const rutaDiv = document.createElement("div");
     rutaDiv.classList.add("ruta-section", "mb-4");
@@ -82,7 +99,7 @@ function renderTransportes(filtroRuta = "") {
     const cardsContainer = document.createElement("div");
     cardsContainer.classList.add("d-flex", "flex-wrap", "gap-3");
 
-    transportes.forEach((transporte) => {
+    transportesFiltrados.forEach((transporte) => {
       const card = document.createElement("div");
       card.classList.add("card", "p-2");
       card.style.width = "18rem";
@@ -93,28 +110,21 @@ function renderTransportes(filtroRuta = "") {
           : `<div class="d-flex align-items-center justify-content-center bg-secondary text-white" style="height:200px;">Imagen no disponible</div>`;
 
       card.innerHTML = `
-                ${imgContent}
-                <div class="card-body">
-                    <h5 class="card-title">${transporte.nombre}</h5>
-                    <p class="card-text"><strong>Tipo:</strong> ${
-                      transporte.tipo
-                    }</p>
-                    <p class="card-text"><strong>Frecuencia:</strong> ${
-                      transporte.frecuencia
-                    }</p>
-                    <p class="card-text"><strong>Precio:</strong> C$ ${
-                      transporte.precio
-                    }</p>
-                    ${
-                      transporte.frecuencia.toLowerCase() === "bajo reserva"
-                        ? `<button class="btn btn-primary reservar-btn" data-id="${transporte.id}" 
-                    data-nombre="${transporte.nombre}"
-                    data-precio="${transporte.precio}">Reservar</button>`
-                        : `<span class="text-muted"><strong>No disponible para reserva</strong></span>`
-                    }
-
-                </div>
-            `;
+        ${imgContent}
+        <div class="card-body">
+          <h5 class="card-title">${transporte.nombre}</h5>
+          <p class="card-text"><strong>Tipo:</strong> ${transporte.tipo}</p>
+          <p class="card-text"><strong>Frecuencia:</strong> ${transporte.frecuencia}</p>
+          <p class="card-text"><strong>Precio:</strong> C$ ${transporte.precio}</p>
+          ${
+            transporte.frecuencia.toLowerCase() === "bajo reserva"
+              ? `<button class="btn btn-primary reservar-btn" data-id="${transporte.id}" 
+                data-nombre="${transporte.nombre}"
+                data-precio="${transporte.precio}">Reservar</button>`
+              : `<span class="text-muted"><strong>No disponible para reserva</strong></span>`
+          }
+        </div>
+      `;
 
       card.addEventListener("click", () =>
         seleccionarTransporte(transporte, card)
@@ -162,7 +172,7 @@ transportContainer.addEventListener("click", (e) => {
     const fechaInput = document.getElementById("fechaReserva");
     if (fechaInput) {
       fechaInput.min = new Date().toISOString().split("T")[0];
-      fechaInput.value = ""; 
+      fechaInput.value = "";
     }
 
     const modal = new bootstrap.Modal(document.getElementById("reservaModal"));
@@ -174,6 +184,21 @@ rutaSelect.addEventListener("change", (e) => {
   const idRuta = e.target.value;
   renderTransportes(idRuta);
 });
+
+// nuevos listeners de filtros
+if (tipoSelect) {
+  tipoSelect.addEventListener("change", () => {
+    renderTransportes(rutaSelect.value);
+  });
+}
+
+if (precioMinInput && precioMaxInput) {
+  [precioMinInput, precioMaxInput].forEach((input) => {
+    input.addEventListener("input", () => {
+      renderTransportes(rutaSelect.value);
+    });
+  });
+}
 
 function agregarAlCarrito(reserva) {
   let carrito = obtenerCarrito();

@@ -43,7 +43,6 @@
       </button>
     </div>
 
-    <!-- 🔥 Modal Resumen Pago (moverlo fuera del header y del carrito) -->
     <div
       class="modal fade"
       id="resumenPagoModal"
@@ -65,7 +64,6 @@
               <span id="totalPagar" class="fw-bold text-success">$0.00</span>
             </div>
 
-            <!-- 🆕 Selección de método de pago -->
             <div class="mt-3">
               <label for="metodoPago" class="form-label fw-bold"
                 >Método de pago</label
@@ -101,26 +99,69 @@
         <h1>Gestión de hoteles</h1>
         <p>Explora las opciones según la ruta turística o mira todas juntas</p>
 
-        <!-- Filtro -->
         <div class="mb-4">
-          <label for="rutaSelect" class="form-label fw-bold"
-            >Rutas Turísticas</label
-          >
-          <select class="form-select" id="rutaSelect">
-            <option value="">-- Todas las rutas --</option>
-            <option value="1">Rutas de nuestro Río San Juan</option>
-            <option value="2">Nuestro Gran Lago Cocibolca</option>
-            <option value="3">Rutas Segovianas</option>
-            <option value="4">Rutas Matagalpinas</option>
-            <option value="5">Paisajes Jinoteganos</option>
-            <option value="6">Ruta de los Volcanes</option>
-            <option value="7">Rutas de Ciudades Patrimoniales</option>
-            <option value="8">Ruta de los Pueblos Artesanos</option>
-            <option value="9">Rutas Playeras</option>
-            <option value="10">Rutas Caribeñas</option>
-            <option value="11">Ruta Gastronómica</option>
-            <option value="12">Ruta Boaqueña y Chontaleñas</option>
-          </select>
+          <h5>Filtrar por:</h5>
+
+          <div class="row g-2">
+            <!-- Filtro de ruta -->
+            <div class="col-md-3">
+              <label for="rutaSelect" class="form-label"
+                ><strong>Rutas Turísticas</strong></label
+              >
+              <select class="form-select" id="rutaSelect">
+                <option value="">-- Todas las rutas --</option>
+                <option value="1">Rutas de nuestro Río San Juan</option>
+                <option value="2">Nuestro Gran Lago Cocibolca</option>
+                <option value="3">Rutas Segovianas</option>
+                <option value="4">Rutas Matagalpinas</option>
+                <option value="5">Paisajes Jinoteganos</option>
+                <option value="6">Ruta de los Volcanes</option>
+                <option value="7">Rutas de Ciudades Patrimoniales</option>
+                <option value="8">Ruta de los Pueblos Artesanos</option>
+                <option value="9">Rutas Playeras</option>
+                <option value="10">Rutas Caribeñas</option>
+                <option value="11">Ruta Gastronómica</option>
+                <option value="12">Ruta Boaqueña y Chontaleñas</option>
+              </select>
+            </div>
+
+            <!-- Filtro rango de precio -->
+            <div class="col-md-2">
+              <label for="precioMin" class="form-label"
+                ><strong>Precio mínimo</strong></label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="precioMin"
+                placeholder="C$" />
+            </div>
+            <div class="col-md-2">
+              <label for="precioMax" class="form-label"
+                ><strong>Precio máximo</strong></label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="precioMax"
+                placeholder="C$" />
+            </div>
+
+            <!-- Filtro número de estrellas -->
+            <div class="col-md-2">
+              <label for="estrellasSelect" class="form-label"
+                ><strong>Estrellas</strong></label
+              >
+              <select class="form-select" id="estrellasSelect">
+                <option value="">-- Todas --</option>
+                <option value="1">★</option>
+                <option value="2">★★</option>
+                <option value="3">★★★</option>
+                <option value="4">★★★★</option>
+                <option value="5">★★★★★</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <!-- Lista de Hoteles -->
