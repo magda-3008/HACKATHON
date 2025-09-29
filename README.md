@@ -7,9 +7,8 @@ La plataforma centraliza información y reservas en un solo sitio, ofreciendo un
 ## Características principales
 - Búsqueda de destinos y rutas turísticas.
 - Reservas de hoteles y transporte desde la misma plataforma.
-- Descarga de materiales (folletos en PDF).
 - Perfil de usuario con historial de reservas.
-- Filtros por tipo de servicio, estrellas del hotel, precio, tipo de transporte y ubicación.
+- Filtros por tipo de servicio, estrellas del hotel, precio, tipo de transporte y tipo de lugar.
 
 
 ## Requisitos
@@ -27,14 +26,7 @@ La plataforma centraliza información y reservas en un solo sitio, ofreciendo un
 - Conexión a Internet de 10 Mbps o más para contenido multimedia.
 
 ## Instalación
-No requiere instalación.  
-Solo necesitas:
-1. Abrir un navegador web compatible.  
-2. Ingresar la URL del sitio: //notienejajalol.com
-
-## Run Locally
-
-Si deseas ejecutar el proyecto en tu computadora:
+Para instalar el proyecto en tu computadora, debes seguir estos pasos:
 
 1. Clona el repositorio:
 
@@ -54,14 +46,13 @@ node server.js
 
 5. Luego abre tu navegador en:
 
-http://localhost:3000/HTML/home2.html
+http://localhost:3000/HTML/index.html
 
 ## Uso básico
 1. Acceder al sitio desde tu navegador.  
 2. Registrarse o iniciar sesión.  
 3. Explorar las secciones: Lugares, rutas, transporte, hoteles.  
-4. Realizar reservas completando los formularios.  
-5. Descargar folletos en PDF si se desea.  
+4. Realizar reservas completando los formularios.   
 
 ## Seguridad
 - El sitio funciona bajo conexión segura (HTTPS).  
