@@ -575,11 +575,6 @@ async function cargarReservasBD(idUsuario) {
     const response = await fetch(`/obtenerreservas/${idUsuario}`);
     const data = await response.json();
 
-    // if (!data.success) {
-    //     alert("No se pudieron cargar las reservas");
-    //     return;
-    // }
-
     reservasData = data.reservas;
     reservasFiltradas = [...reservasData];
 

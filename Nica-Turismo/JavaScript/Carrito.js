@@ -57,7 +57,7 @@ function agregarAlCarrito(reserva) {
 function eliminarReserva(id, tipo, id_hotel = null) {
   let carrito = obtenerCarrito();
 
-  // 🔥 Buscar por el campo correcto según el tipo
+  // Buscar por el campo correcto según el tipo
   if (tipo === "hotel" && id_hotel !== null) {
     carrito = carrito.filter(
       (item) => !(item.id_hotel === id_hotel && item.tipo === tipo)

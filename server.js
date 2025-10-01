@@ -714,8 +714,8 @@ app.get('/lugares', (req, res) => {
         });
 
         res.json({ 
-            lugares: lugares, // Array plano de lugares
-            rutas: rutasUnicas // Array de objetos ruta
+            lugares: lugares, 
+            rutas: rutasUnicas 
         });
     });
 });
