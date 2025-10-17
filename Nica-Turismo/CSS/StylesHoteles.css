@@ -48,10 +48,10 @@ header {
 
 .header_nav {
   height: var(--header-h);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: space-between; /* distribuye logo y menú */
   align-items: center;
-  padding: 0 16px;
+  padding: 0 40px;
 }
 
 .header_nav img {
@@ -61,18 +61,19 @@ header {
 
 .nav_list {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 60px;
   list-style: none;
   margin: 0;
-  padding: 0 40px;
-  align-items: flex-end;
+  padding: 0;
 }
 
 .nav_list a {
   text-decoration: none;
   color: white;
   font-weight: bold;
+  transition: color 0.3s ease;
 }
 
 .nav_list a:hover {
@@ -203,6 +204,12 @@ header {
 
 /*RESPONSIVE DESIGN PARA HEADER Y MENÚ HAMBURGUESA*/
 @media (max-width: 991px) {
+  
+  .logo .NICATUR{
+    height: 70px;
+    width: auto;
+  }
+
   /* Header ajustado */
   header {
     flex-direction: column;
@@ -434,5 +441,9 @@ header {
     display: flex; /* ahora se muestra el ícono */
     justify-content: center;
     align-items: center;
+  }
+
+  .logo span{
+    display: none;
   }
 }
