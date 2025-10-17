@@ -1,7 +1,25 @@
+:root {
+  --primary: #558145;
+  --secondary: #264653;
+  --accent: #e9c46a;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --success: #28a745;
+  --danger: #dc3545;
+  --gray: #6c757d;
+  --header-h: 80px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   padding-top: var(--header-h);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: url("../Resource/LagunaDePerlas.jpg") no-repeat center center fixed;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: url("../Resource/LagunaDePerlas.jpg") no-repeat center center
+    fixed;
   background-size: cover;
   background-color: rgba(0, 0, 0, 0.4);
   background-blend-mode: darken;
@@ -10,37 +28,22 @@ body {
 }
 
 .contenedor {
-  max-width: 1300px;   
-  margin: 0 auto;      
-  background: #fff;    
-  border-radius: 12px; 
-  padding: 20px;       
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15); 
-  min-height: calc(100vh - var(--header-h)); 
+  max-width: 1300px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  min-height: calc(100vh - var(--header-h));
 }
-
-:root {
-  --primary: #558145;
-  --secondary: #264653;
-  --accent: #E9C46A;
-  --light: #F8F9FA;
-  --dark: #343A40;
-  --success: #28A745;
-  --danger: #DC3545;
-  --gray: #6C757D;
-  --header-h: 80px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-* { box-sizing: border-box; }
 
 header {
   position: fixed;
-  top: 0;           
+  top: 0;
   left: 0;
   width: 100%;
   z-index: 10;
-  background: linear-gradient(to right, #36522C, #79B863);
+  background: linear-gradient(to right, #36522c, #79b863);
 }
 
 .header_nav {
@@ -48,7 +51,7 @@ header {
   display: grid;
   grid-template-columns: 1fr 1fr;
   align-items: center;
-  padding: 0 16px; 
+  padding: 0 16px;
 }
 
 .header_nav img {
@@ -58,11 +61,12 @@ header {
 
 .nav_list {
   display: flex;
-  justify-content: space-between;  
+  justify-content: space-between;
   width: 100%;
   list-style: none;
   margin: 0;
   padding: 0 40px;
+  align-items: flex-end;
 }
 
 .nav_list a {
@@ -72,7 +76,7 @@ header {
 }
 
 .nav_list a:hover {
-  color: #E9C46A;
+  color: #e9c46a;
 }
 
 .logo span {
@@ -108,7 +112,7 @@ header {
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   background: #fff;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 
@@ -119,7 +123,7 @@ header {
 
 #HotelContainer .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
 #HotelContainer .card-body h5 {
@@ -172,7 +176,7 @@ header {
   width: 250px;
   max-height: 400px;
   overflow-y: auto;
-  z-index: 9999;
+  z-index: 1000; /* Reducido para que no se sobreponga al menú */
 }
 
 .carrito-item {
@@ -193,183 +197,242 @@ header {
   border: 2px solid #65afeb;
 }
 
-/* 📱 RESPONSIVE DESIGN */
+.navbar {
+  display: none;
+}
+
+/*RESPONSIVE DESIGN PARA HEADER Y MENÚ HAMBURGUESA*/
 @media (max-width: 991px) {
+  /* Header ajustado */
+  header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #36522c, #79b863);
+  }
 
-     .menu-icono {
-        display: none;
-    }
-
-    .header {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 20px;
-        min-height: auto;
-    }
-
-    .menu {
-    position: fixed;   /* lo fija en la pantalla */
-    top: 0;
-    left: 0;
-    right: 0;
+  .header_nav {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    z-index: 999;
+    width: 100%;
+    padding: 0 16px;
+  }
+
+  /* Logo reducido */
+  .header_nav img {
+    height: 60px;
+    width: auto;
+  }
+
+  /* Ocultar nav original y usar menú hamburguesa */
+  .nav_list {
+    display: none;
+  }
+
+  /* ---------- Ícono del menú hamburguesa ---------- */
+  .menu-icono-movil {
+    display: block;
+    cursor: pointer;
+    width: 35px;
+    height: 25px;
+    position: relative;
+    z-index: 1200; /* por encima del overlay */
+    order: -1; /* si quieres que aparezca a la izquierda */
+  }
+
+  /* Las tres barras */
+  .menu-icono-movil span,
+  .menu-icono-movil::before,
+  .menu-icono-movil::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: white;
+    border-radius: 2px;
+    transition: transform 0.3s ease, opacity 0.2s ease, top 0.3s ease,
+      bottom 0.3s ease;
+  }
+
+  /* Posiciones iniciales */
+  .menu-icono-movil::before {
+    top: 4px;
+  }
+  .menu-icono-movil span {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .menu-icono-movil::after {
+    bottom: 4px;
+  }
+
+  /* ---------- Animación al abrir el menú ---------- */
+  #menu:checked + .menu-icono-movil::before {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  #menu:checked + .menu-icono-movil::after {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%) rotate(-45deg);
+  }
+
+  /* La barra del medio desaparece pero no rompe la forma */
+  #menu:checked + .menu-icono-movil span {
+    opacity: 0;
+    transform: scaleX(0.4) translateY(-50%);
+  }
+
+  /* ---------- Menú desplegable ---------- */
+  .navbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* cubre toda la pantalla */
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 1099;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 25px;
+    padding-top: 150px;
+  }
+
+  /* Mostrar menú cuando está activo */
+  #menu:checked ~ .navbar {
+    display: flex;
+  }
+
+  /* ---------- Enlaces del menú ---------- */
+  .navbar ul {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .navbar ul li a {
+    font-size: 22px;
+    color: #fff;
+    display: inline-block;
+    padding: 10px 0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .navbar ul li a:hover {
+    color: #00c4ff; /* opcional: efecto hover */
+  }
+
+  /* Ajuste del logo para que no se desplace */
+  .logo {
+    margin-left: 50px; /* Compensa el espacio del ícono */
+  }
+
+  /* Contenedor principal ajustado */
+  .contenedor {
+    padding: 15px;
+  }
+
+  /* Cards de hoteles más compactas */
+  #HotelContainer {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #HotelContainer .card {
+    width: 100%;
+  }
+
+  /* Modal y botones más adaptables */
+  .modal-content {
+    width: 90%;
+    margin: auto;
+  }
+
+  .btn-primary,
+  #confirmarReserva {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+  /* Ajuste del carrito para móviles */
+  .carrito-flotante {
+    width: 200px;
+    right: 10px;
+  }
 }
 
-/* Empuja el contenido debajo del header fijo */
-.header-content {
-    margin-top: 80px; /* ajusta según el alto del header */
+/*Móviles pequeños (extra small)*/
+@media (max-width: 576px) {
+  .header_nav img {
+    height: 50px;
+  }
+
+  .logo span {
+    font-size: 20px;
+  }
+
+  #HotelContainer .card-body h5 {
+    font-size: 1rem;
+  }
+
+  #HotelContainer .card-body p {
+    font-size: 0.85rem;
+  }
+
+  .btn-primary,
+  #confirmarReserva {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .carrito-flotante {
+    width: 180px;
+    top: 90px;
+  }
 }
 
-    /* Logo */
-    .menu-icono {
-        width: 60px;
-        height: auto;
-        padding: 0;
-    }
+/* === Estilos del carrito flotante === */
+.icono-carrito {
+  display: none; /* visible solo en móviles */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #198754; /* verde Bootstrap */
+  color: white;
+  font-size: 26px;
+  padding: 12px 16px;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  z-index: 1200;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
 
-    /* Ícono del menú hamburguesa */
-    .menu label {
-        display: block;
-        width: 35px;
-        height: 25px;
-        position: relative;
-        cursor: pointer;
-        top: 5px;
-    }
+.icono-carrito:hover {
+  background-color: #157347;
+  transform: scale(1.05);
+}
 
-    /* Las tres barras del ícono */
-    .menu label::before,
-    .menu label::after,
-    .menu label span {
-        content: "";
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: #fff;
-        border-radius: 2px;
-        transition: 0.3s;
-    }
+/* === Modal del carrito oculto en móviles === */
+@media (max-width: 991px) {
+  #carritoContainer {
+    display: none; /* se oculta el modal original */
+  }
 
-    .menu label::before {
-        top: 0;
-    }
-
-    .menu label span {
-        top: 10px;
-    }
-
-    .menu label::after {
-        bottom: 0;
-    }
-
-    /* Animación del ícono al abrir menú */
-    #menu:checked + label::before {
-        transform: rotate(45deg);
-        top: 10px;
-    }
-
-    #menu:checked + label::after {
-        transform: rotate(-45deg);
-        bottom: 10px;
-    }
-
-    #menu:checked + label span {
-        opacity: 0;
-    }
-
-    /* Ocultar menú por defecto */
-    .menu .navbar {
-        display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
-        text-align: center;
-        padding: 20px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    /* Mostrar menú cuando se activa el checkbox */
-    #menu:checked ~ .navbar {
-        display: block;
-    }
-
-    .menu .navbar ul {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .menu .navbar ul li a {
-        font-size: 18px;
-        color: #fff;
-        padding: 10px;
-        display: inline-block;
-    }
-
-    /* Texto central */
-    .header-txt {
-        width: 100%;
-        margin: 120px 0 20px 0;
-    }
-
-    .header-txt h1 {
-        font-size: 36px;
-        line-height: 45px;
-        color: #124955;
-    }
-
-    .header-txt p {
-        font-size: 14px;
-        color: #ffffff;
-        padding: 0 10px;
-    }
-
-    /* Botón */
-    .btn-primary {
-        font-size: 16px;
-        padding: 10px 20px;
-    }
-
-    /* Carrusel */
-    .images {
-        position: static;
-        width: 100%;
-        height: auto;
-        margin-top: 30px;
-    }
-
-    .swiper {
-        height: 250px;
-    }
-
-    .swiper-slide h3 {
-        font-size: 24px;
-    }
-
-    .rows {
-        position: static;
-        display: flex;
-        justify-content: center;
-        margin-top: 15px;
-    }
-
-    .swiper-button-prev,
-    .swiper-button-next {
-        height: 40px;
-        width: 40px;
-        border: 1px solid #ffffff;
-    }
-
-    .header {
-        background-position: center;
-        background-size: cover;
-    }
+  .icono-carrito {
+    display: flex; /* ahora se muestra el ícono */
+    justify-content: center;
+    align-items: center;
+  }
 }

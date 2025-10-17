@@ -77,8 +77,9 @@ body{
 .menu-icono{
     width: 100px;
     height: auto;
-    padding-bottom: 620px;
+    padding-bottom: 610px;
     cursor: pointer;
+    padding-left: 20px;
 }
 
 .menu label {
@@ -193,7 +194,7 @@ body{
     border: #65afeb;
 }
 
-/* 🔹 Por defecto: mostrar solo el logo de escritorio */
+/*Por defecto: mostrar solo el logo de escritorio */
 .menu-icono {
     display: block;
 }
@@ -202,7 +203,7 @@ body{
     display: none;
 }
 
-/* 📱 RESPONSIVE DESIGN */
+/*RESPONSIVE DESIGN */
 @media (max-width: 991px) {
 
      .menu-icono {
@@ -250,68 +251,86 @@ body{
         padding: 0;
     }
 
-    /* Ícono del menú hamburguesa */
-    .menu label {
-        display: block;
-        width: 35px;
-        height: 25px;
-        position: relative;
-        cursor: pointer;
-        top: 5px;
-    }
+.menu label {
+    display: block;
+    width: 35px;
+    height: 25px;
+    position: relative;
+    cursor: pointer;
+    z-index: 1200; /* encima del overlay del menú */
+    -webkit-tap-highlight-color: transparent;
+}
 
-    /* Las tres barras del ícono */
-    .menu label::before,
-    .menu label::after,
-    .menu label span {
-        content: "";
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background-color: #fff;
-        border-radius: 2px;
-        transition: 0.3s;
-    }
+/* barra del medio */
+.menu label span {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: transform .28s ease, opacity .18s ease;
+}
 
-    .menu label::before {
-        top: 0;
-    }
+/* barras superior e inferior*/
+.menu label::before,
+.menu label::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: transform .28s ease, top .28s ease, bottom .28s ease;
+}
 
-    .menu label span {
-        top: 10px;
-    }
+/* posición inicial */
+.menu label::before { top: 4px; }
+.menu label::after  { bottom: 4px; }
 
-    .menu label::after {
-        bottom: 0;
-    }
+/* ---------- Estado "checked" - transformar en X ---------- */
+/* Usamos ~ para cubrir casos donde el input no está inmediatamente antes del label */
+#menu:checked ~ label span {
+    /* escondemos la barra del medio sin colapsar el layout (mejor que opacity:0 directa) */
+    opacity: 0;
+    transform: scaleX(0.2) translateY(-50%);
+}
 
-    /* Animación del ícono al abrir menú */
-    #menu:checked + label::before {
-        transform: rotate(45deg);
-        top: 10px;
-    }
+#menu:checked ~ label::before {
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+}
 
-    #menu:checked + label::after {
-        transform: rotate(-45deg);
-        bottom: 10px;
-    }
+#menu:checked ~ label::after {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%) rotate(-45deg);
+}
 
-    #menu:checked + label span {
-        opacity: 0;
-    }
+.menu label,
+#menu:checked ~ label {
+    z-index: 1200;
+    pointer-events: auto;
+}
 
     /* Ocultar menú por defecto */
     .menu .navbar {
-        display: none;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background-color: rgba(0, 0, 0, 0.9);
-        text-align: center;
-        padding: 20px 0;
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            position: fixed; /* fijo en pantalla */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%; /* cubre toda la pantalla */
+            background-color: rgba(0,0,0,0.95);
+            z-index: 1099; /* encima de todo */
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 25px;
+            padding-top: 150px;
     }
 
     /* Mostrar menú cuando se activa el checkbox */
@@ -393,7 +412,7 @@ body{
     }
 }
 
-/* 📱 Extra pequeño: móviles muy chicos */
+/* Extra pequeño: móviles muy chicos */
 @media (max-width: 576px) {
     .header-txt h1 {
         font-size: 30px;

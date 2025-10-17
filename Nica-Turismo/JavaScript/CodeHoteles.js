@@ -214,3 +214,15 @@ rutaSelect.addEventListener("change", renderHotelesConFiltros);
 document.getElementById("precioMin").addEventListener("input", renderHotelesConFiltros);
 document.getElementById("precioMax").addEventListener("input", renderHotelesConFiltros);
 document.getElementById("estrellasSelect").addEventListener("change", renderHotelesConFiltros);
+
+const carrito = document.getElementById('carritoContainer');
+const modales = document.querySelectorAll('.modal');
+
+modales.forEach(modal => {
+    modal.addEventListener('show.bs.modal', () => {
+        carrito.style.display = 'none';
+    });
+    modal.addEventListener('hidden.bs.modal', () => {
+        carrito.style.display = '';
+    });
+});

@@ -14,11 +14,32 @@
   <body>
     <header>
       <div class="header_nav">
+        <!-- Logo -->
         <div class="logo">
           <img src="../Resource/LogoNICATURISMO.png" alt="Logo" id="logo" />
           <span>Nica Turismo</span>
         </div>
 
+        <!-- Checkbox para controlar menú -->
+        <input type="checkbox" id="menu" style="display: none" />
+
+        <!-- Ícono hamburguesa -->
+        <label for="menu" class="menu-icono-movil">
+          <span></span>
+        </label>
+
+        <!-- Menú desplegable -->
+        <nav class="navbar">
+          <ul>
+            <li><a href="rutas.html">Rutas turísticas</a></li>
+            <li><a href="lugares.html">Lugares a visitar</a></li>
+            <li><a href="transporte.html">Transporte</a></li>
+            <li><a href="hoteles.html">Hoteles</a></li>
+            <li><a href="perfilusuario.html">Mi perfil</a></li>
+          </ul>
+        </nav>
+
+        <!-- Menú normal para escritorio -->
         <ul class="nav_list">
           <li><a href="rutas.html">Rutas turísticas</a></li>
           <li><a href="lugares.html">Lugares a visitar</a></li>
@@ -28,6 +49,9 @@
         </ul>
       </div>
     </header>
+
+    <!-- Ícono flotante del carrito (solo visible en móvil) -->
+    <div class="icono-carrito" id="iconoCarrito">🛒</div>
 
     <!-- Carrito flotante -->
     <div
@@ -230,5 +254,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../JavaScript/CodeHoteles.js"></script>
     <script src="../JavaScript/Carrito.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const iconoCarrito = document.getElementById("iconoCarrito");
+        const carrito = document.getElementById("carritoContainer");
+
+        iconoCarrito.addEventListener("click", () => {
+          // alterna la visibilidad del carrito al tocar el ícono
+          carrito.style.display =
+            carrito.style.display === "block" ? "none" : "block";
+        });
+      });
+    </script>
   </body>
 </html>
